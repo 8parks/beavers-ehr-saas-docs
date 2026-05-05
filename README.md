@@ -4,7 +4,7 @@
 
 ## Documentation Site
 
-📖 **[View Docs →](https://your-org.github.io/beavers-ehr-saas-docs/)**
+📖 **[View Docs →](https://8parks.github.io/beavers-ehr-saas-docs/)**
 
 Korean is the primary language. English version is in progress.
 
