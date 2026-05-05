@@ -117,6 +117,7 @@ const enSidebar = [
 export default defineConfig({
   title: 'Baby Beavers EHR SaaS',
   description: 'AWS Native EHR SaaS 보안 아키텍처 가이드',
+  base: '/beavers-ehr-saas-docs/',
 
   locales: {
     ko: {
