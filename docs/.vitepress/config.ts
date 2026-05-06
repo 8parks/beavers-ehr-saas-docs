@@ -176,7 +176,7 @@ export default defineConfig({
 
   themeConfig: {
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/your-org/beavers-ehr-saas-docs' },
+      { icon: 'github', link: 'https://github.com/8parks/beavers-ehr-saas-docs' },
     ],
     search: { provider: 'local' },
   },
