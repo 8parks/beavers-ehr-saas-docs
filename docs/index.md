@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: Baby Beavers
+  name: Baby Beavers 4aaS
   text: EHR SaaS 보안 아키텍처 가이드
-  tagline: AWS Native Multi-Tenant EHR SaaS를 위한 아키텍처 결정 기록 및 보안 설계 문서
+  tagline: AWS Native Multi-Tenant EHR SaaS를 위한 아키텍처 설계 문서
   actions:
     - theme: brand
-      text: 한국어 문서 보기
+      text: 한국어
       link: /ko/
     - theme: alt
       text: English (In Progress)
@@ -26,13 +26,13 @@ features:
 
 ## 언어 선택 / Language
 
-이 문서는 한국어(주요 버전)와 영어(진행 중) 두 가지 언어로 제공됩니다.
+이 문서는 한국어와 영어 두 가지 언어로 제공됩니다.
 
 This documentation is available in **Korean (primary)** and **English (in progress)**.
 
 | 언어 | 상태 | 링크 |
 |------|------|------|
-| 한국어 | 주요 버전 — 전체 구조 제공 | [문서 보기 →](/ko/) |
-| English | 진행 중 — 골격 구조만 제공 | [View Docs →](/en/) |
+| 한국어 | 전체 구조 제공 | [문서 보기 →](/ko/) |
+| English | 진행 중 | [View Docs →](/en/) |
 
 > **참고:** 현재 한국어 버전이 기본 문서입니다. 영어 버전은 순차적으로 작성될 예정입니다.

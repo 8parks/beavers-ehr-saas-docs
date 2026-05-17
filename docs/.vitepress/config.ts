@@ -10,49 +10,79 @@ const koSidebar = [
     ],
   },
   {
-    text: '아키텍처 결정 기록 (ADR)',
-    items: [
-      { text: 'ADR 목록', link: '/ko/03-adr/' },
-      { text: 'ADR-001. 테넌트 격리 전략', link: '/ko/03-adr/adr-001-tenant-isolation' },
-      { text: 'ADR-002. 계정 분리 전략', link: '/ko/03-adr/adr-002-account-separation' },
-      { text: 'ADR-003. JWT 기반 테넌트 컨텍스트', link: '/ko/03-adr/adr-003-jwt-tenant-context' },
-      { text: 'ADR-004. Schema-per-Tenant vs RLS', link: '/ko/03-adr/adr-004-schema-per-tenant-vs-rls' },
-      { text: 'ADR-005. 감사 로그 보존 & 무결성', link: '/ko/03-adr/adr-005-audit-log-integrity' },
-      { text: 'ADR-006. KMS 서명 & 암호화 전략', link: '/ko/03-adr/adr-006-kms-signing' },
-      { text: 'ADR-007. 보안 자동화 (Config/Hub/SSM)', link: '/ko/03-adr/adr-007-security-automation' },
-      { text: 'ADR-008. 프라이빗 연결 & VPC 엔드포인트', link: '/ko/03-adr/adr-008-vpc-endpoints' },
-      { text: 'ADR-009. 연구 데이터셋 & 가명처리', link: '/ko/03-adr/adr-009-pseudonymization' },
-      { text: 'ADR-010. 관리 계정 & 앱 계정 분리', link: '/ko/03-adr/adr-010-account-separation' },
-    ],
-  },
-  {
-    text: '보안 & 컴플라이언스',
-    items: [
-      { text: '보안 요구사항 & 위협 모델링', link: '/ko/04-threat-modeling' },
-      { text: '컴플라이언스 범위 & 규제 매핑', link: '/ko/05-compliance-mapping' },
-    ],
-  },
-  {
     text: '시나리오 기반 보안 설계',
     items: [
-      { text: '시나리오 개요', link: '/ko/06-scenario-design/' },
-      { text: '환자 기록 생성 & 서명', link: '/ko/06-scenario-design/patient-record-creation' },
-      { text: '환자 기록 조회', link: '/ko/06-scenario-design/patient-record-retrieval' },
-      { text: '연구 데이터셋 생성', link: '/ko/06-scenario-design/research-dataset-generation' },
-      { text: '크로스 테넌트 접근 방지', link: '/ko/06-scenario-design/cross-tenant-prevention' },
-      { text: '감사 로그 수집 & 무결성 검증', link: '/ko/06-scenario-design/audit-log-integrity' },
-      { text: '보안 탐지 & 자동 대응', link: '/ko/06-scenario-design/security-remediation' },
-      { text: '관리 계정 & 앱 계정 분리 운영', link: '/ko/06-scenario-design/admin-account-separation' },
+      { text: '시나리오 카탈로그', link: '/ko/02-scenarios/' },
+      {
+        text: '비즈니스 시나리오',
+        collapsed: false,
+        items: [
+          { text: 'S1. 환자 진료 기록 작성', link: '/ko/02-scenarios/patient-record-creation' },
+          { text: 'S2. 환자 진료 기록 조회', link: '/ko/02-scenarios/patient-record-retrieval' },
+          { text: 'S3. 연구 데이터셋 생성', link: '/ko/02-scenarios/research-dataset-generation' },
+        ],
+      },
+      {
+        text: '운영 시나리오',
+        collapsed: false,
+        items: [
+          { text: 'S4. Tenant 온보딩', link: '/ko/02-scenarios/s4-tenant-onboarding' },
+          { text: 'S5. Tenant 오프보딩', link: '/ko/02-scenarios/s5-tenant-offboarding' },
+        ],
+      },
+      {
+        text: '비상 / 장애 대응',
+        collapsed: false,
+        items: [
+          { text: 'S6. 운영자 비상 접근 (Break-glass)', link: '/ko/02-scenarios/s6-break-glass' },
+          { text: 'S7. 데이터베이스 장애 및 복구', link: '/ko/02-scenarios/s7-db-recovery' },
+        ],
+      },
+    ],
+  },
+  {
+    text: '멀티테넌트 설계 전략 (ADR)',
+    items: [
+      { text: 'ADR 개요 및 작성 원칙', link: '/ko/03-adr/' },
+      { text: '멀티테넌트 전략', link: '/ko/03-adr/multitenant-strategy' },
+      { text: '인증 / 인가 전략', link: '/ko/03-adr/auth-strategy' },
+      { text: '데이터 및 스토리지 전략', link: '/ko/03-adr/data-storage-strategy' },
+      { text: '로깅 및 감사 전략', link: '/ko/03-adr/logging-strategy' },
+      { text: '운영 및 라이프사이클 전략', link: '/ko/03-adr/operations-strategy' },
+    ],
+  },
+  {
+    text: '컴플라이언스',
+    items: [
+      { text: '적용 규제 범위', link: '/ko/04-compliance#적용-규제-범위' },
+      { text: '책임 공유 및 계약 범위', link: '/ko/04-compliance#책임-공유-및-계약-범위' },
+      { text: '통제 영역별 매핑', link: '/ko/04-compliance#통제-영역별-매핑' },
+      { text: '보안 요구사항 총정리', link: '/ko/04-compliance#보안-요구사항-총정리' },
+    ],
+  },
+  {
+    text: '위협 모델링',
+    items: [
+      { text: '보안 목표', link: '/ko/05-threat-modeling#보안-목표' },
+      { text: '위협 모델링', link: '/ko/05-threat-modeling#위협-모델링' },
+    ],
+  },
+  {
+    text: '운영 가이드 (Runbook)',
+    items: [
+      { text: 'Tenant 라이프사이클', link: '/ko/06-runbook#tenant-라이프사이클' },
+      { text: '자격증명 및 키 관리', link: '/ko/06-runbook#자격증명-및-키-관리' },
+      { text: '사고 대응', link: '/ko/06-runbook#사고-대응' },
+      { text: '정기 점검 및 검증', link: '/ko/06-runbook#정기-점검-및-검증' },
     ],
   },
   {
     text: '참고 자료',
     items: [
-      { text: '보안 컨트롤 카탈로그', link: '/ko/07-security-control-catalog' },
-      { text: '검증 체크리스트', link: '/ko/08-verification-checklist' },
-      { text: '다이어그램', link: '/ko/09-diagrams' },
-      { text: '한계 & 향후 과제', link: '/ko/10-limitations' },
-      { text: '참고자료', link: '/ko/11-references' },
+      { text: '규제 및 표준 문서', link: '/ko/07-references#규제-및-표준-문서' },
+      { text: '아키텍처 및 보안 레퍼런스', link: '/ko/07-references#아키텍처-및-보안-레퍼런스' },
+      { text: '외부 기술 자료', link: '/ko/07-references#외부-기술-자료' },
+      { text: '변경 이력', link: '/ko/07-references#변경-이력' },
     ],
   },
 ]
@@ -67,48 +97,32 @@ const enSidebar = [
     ],
   },
   {
-    text: 'Architectural Decision Records (ADR)',
+    text: 'Scenario-Based Security Design',
     items: [
-      { text: 'ADR Index', link: '/en/03-adr/' },
-      { text: 'ADR-001. Tenant Isolation Strategy', link: '/en/03-adr/adr-001-tenant-isolation' },
-      { text: 'ADR-002. Account Separation Strategy', link: '/en/03-adr/adr-002-account-separation' },
-      { text: 'ADR-003. JWT-based Tenant Context', link: '/en/03-adr/adr-003-jwt-tenant-context' },
-      { text: 'ADR-004. Schema-per-Tenant vs RLS', link: '/en/03-adr/adr-004-schema-per-tenant-vs-rls' },
-      { text: 'ADR-005. Audit Log Integrity', link: '/en/03-adr/adr-005-audit-log-integrity' },
-      { text: 'ADR-006. KMS Signing Strategy', link: '/en/03-adr/adr-006-kms-signing' },
-      { text: 'ADR-007. Security Automation', link: '/en/03-adr/adr-007-security-automation' },
-      { text: 'ADR-008. VPC Endpoints', link: '/en/03-adr/adr-008-vpc-endpoints' },
-      { text: 'ADR-009. Pseudonymization Strategy', link: '/en/03-adr/adr-009-pseudonymization' },
-      { text: 'ADR-010. Admin Account Separation', link: '/en/03-adr/adr-010-account-separation' },
+      { text: 'Scenarios Overview', link: '/en/06-scenario-design/' },
     ],
   },
   {
-    text: 'Security & Compliance',
+    text: 'Architectural Decision Records (ADR)',
     items: [
-      { text: 'Security Requirements & Threat Modeling', link: '/en/04-threat-modeling' },
+      { text: 'ADR Index', link: '/en/03-adr/' },
+    ],
+  },
+  {
+    text: 'Compliance',
+    items: [
       { text: 'Compliance Scope & Regulatory Mapping', link: '/en/05-compliance-mapping' },
     ],
   },
   {
-    text: 'Scenario-Based Security Design',
+    text: 'Threat Modeling',
     items: [
-      { text: 'Scenarios Overview', link: '/en/06-scenario-design/' },
-      { text: 'Patient Record Creation & Signing', link: '/en/06-scenario-design/patient-record-creation' },
-      { text: 'Patient Record Retrieval', link: '/en/06-scenario-design/patient-record-retrieval' },
-      { text: 'Research Dataset Generation', link: '/en/06-scenario-design/research-dataset-generation' },
-      { text: 'Cross-Tenant Access Prevention', link: '/en/06-scenario-design/cross-tenant-prevention' },
-      { text: 'Audit Log Collection & Integrity', link: '/en/06-scenario-design/audit-log-integrity' },
-      { text: 'Security Detection & Remediation', link: '/en/06-scenario-design/security-remediation' },
-      { text: 'Admin Account Separation', link: '/en/06-scenario-design/admin-account-separation' },
+      { text: 'Security Requirements & Threat Modeling', link: '/en/04-threat-modeling' },
     ],
   },
   {
-    text: 'Reference',
+    text: 'References',
     items: [
-      { text: 'Security Control Catalog', link: '/en/07-security-control-catalog' },
-      { text: 'Verification Checklist', link: '/en/08-verification-checklist' },
-      { text: 'Diagrams', link: '/en/09-diagrams' },
-      { text: 'Limitations & Future Work', link: '/en/10-limitations' },
       { text: 'References', link: '/en/11-references' },
     ],
   },
@@ -125,18 +139,15 @@ export default defineConfig({
       lang: 'ko-KR',
       themeConfig: {
         nav: [
-          { text: '홈', link: '/ko/' },
           {
             text: '문서',
             items: [
-              { text: '시스템 컨텍스트', link: '/ko/01-system-context' },
-              { text: '레퍼런스 아키텍처', link: '/ko/02-reference-architecture' },
-              { text: '아키텍처 결정 기록', link: '/ko/03-adr/' },
-              { text: '위협 모델링', link: '/ko/04-threat-modeling' },
-              { text: '컴플라이언스 매핑', link: '/ko/05-compliance-mapping' },
-              { text: '시나리오 설계', link: '/ko/06-scenario-design/' },
-              { text: '보안 컨트롤 카탈로그', link: '/ko/07-security-control-catalog' },
-              { text: '검증 체크리스트', link: '/ko/08-verification-checklist' },
+              { text: '시나리오', link: '/ko/02-scenarios/' },
+              { text: 'ADR', link: '/ko/03-adr/' },
+              { text: '컴플라이언스', link: '/ko/04-compliance' },
+              { text: '위협 모델링', link: '/ko/05-threat-modeling' },
+              { text: '운영 가이드', link: '/ko/06-runbook' },
+              { text: '참고 자료', link: '/ko/07-references' },
             ],
           },
         ],
@@ -164,8 +175,6 @@ export default defineConfig({
               { text: 'Threat Modeling', link: '/en/04-threat-modeling' },
               { text: 'Compliance Mapping', link: '/en/05-compliance-mapping' },
               { text: 'Scenario Design', link: '/en/06-scenario-design/' },
-              { text: 'Security Control Catalog', link: '/en/07-security-control-catalog' },
-              { text: 'Verification Checklist', link: '/en/08-verification-checklist' },
             ],
           },
         ],
@@ -175,6 +184,8 @@ export default defineConfig({
   },
 
   themeConfig: {
+    logo: '/logo.svg',
+    logoLink: '/beavers-ehr-saas-docs/',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/8parks/beavers-ehr-saas-docs' },
     ],
