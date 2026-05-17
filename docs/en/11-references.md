@@ -5,7 +5,7 @@ title: References
 # References
 
 > English version is in progress.
-> Please refer to the [Korean version](/ko/11-references) for the full documentation.
+> Please refer to the [Korean version](/ko/07-references) for the full documentation.
 
 ## Planned Sections
 
