@@ -7,6 +7,7 @@ const koSidebar = [
       { text: '개요', link: '/ko/' },
       { text: '시스템 컨텍스트 & 가정', link: '/ko/01-system-context' },
       { text: '레퍼런스 아키텍처', link: '/ko/02-reference-architecture' },
+      { text: '다이어그램', link: '/ko/diagrams' },
     ],
   },
   {
@@ -184,7 +185,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: '/logo.svg',
+    siteTitle: '4aaS',
     logoLink: '/beavers-ehr-saas-docs/',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/8parks/beavers-ehr-saas-docs' },
