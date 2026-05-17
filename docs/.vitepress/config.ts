@@ -7,7 +7,6 @@ const koSidebar = [
       { text: '개요', link: '/ko/' },
       { text: '시스템 컨텍스트 & 가정', link: '/ko/01-system-context' },
       { text: '레퍼런스 아키텍처', link: '/ko/02-reference-architecture' },
-      { text: '다이어그램', link: '/ko/diagrams' },
     ],
   },
   {
@@ -83,6 +82,7 @@ const koSidebar = [
       { text: '규제 및 표준 문서', link: '/ko/07-references#규제-및-표준-문서' },
       { text: '아키텍처 및 보안 레퍼런스', link: '/ko/07-references#아키텍처-및-보안-레퍼런스' },
       { text: '외부 기술 자료', link: '/ko/07-references#외부-기술-자료' },
+      { text: '다이어그램', link: '/ko/diagrams' },
       { text: '변경 이력', link: '/ko/07-references#변경-이력' },
     ],
   },
