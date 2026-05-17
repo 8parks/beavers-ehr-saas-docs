@@ -1,5 +1,5 @@
 ---
-title: 3.1 ADR 개요 및 작성 원칙
+title: ADR 개요 및 작성 원칙
 ---
 
 # ADR 개요 및 작성 원칙
@@ -12,11 +12,11 @@ title: 3.1 ADR 개요 및 작성 원칙
 
 | 섹션 | 다루는 내용 |
 |------|-----------|
-| [3.2 멀티테넌트 전략](./multitenant-strategy) | Schema-per-Tenant, RLS, 테넌트 컨텍스트 전파 |
-| [3.3 인증 / 인가 전략](./auth-strategy) | JWT Claim, RBAC/ABAC, Trust Boundary |
-| [3.4 데이터 및 스토리지 전략](./data-storage-strategy) | 테넌트 데이터 분리, 연구 데이터셋, 가명처리 |
-| [3.5 로깅 및 감사 전략](./logging-strategy) | 로그 무결성, 보존 정책, 통합 감사 |
-| [3.6 운영 및 라이프사이클 전략](./operations-strategy) | Provisioning, 데이터 파기, Break-glass |
+| [멀티테넌트 전략](./multitenant-strategy) | Schema-per-Tenant, RLS, 테넌트 컨텍스트 전파 |
+| [인증 / 인가 전략](./auth-strategy) | JWT Claim, RBAC/ABAC, Trust Boundary |
+| [데이터 및 스토리지 전략](./data-storage-strategy) | 테넌트 데이터 분리, 연구 데이터셋, 가명처리 |
+| [로깅 및 감사 전략](./logging-strategy) | 로그 무결성, 보존 정책, 통합 감사 |
+| [운영 및 라이프사이클 전략](./operations-strategy) | Provisioning, 데이터 파기, Break-glass |
 
 ## ADR 작성 원칙
 
