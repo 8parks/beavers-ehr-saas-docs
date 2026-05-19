@@ -17,8 +17,8 @@ const koSidebar = [
         text: '비즈니스 시나리오',
         collapsed: false,
         items: [
-          { text: 'S1. 환자 진료 기록 작성', link: '/ko/02-scenarios/patient-record-creation' },
-          { text: 'S2. 환자 진료 기록 조회', link: '/ko/02-scenarios/patient-record-retrieval' },
+          { text: 'S1. 환자 정보 조회', link: '/ko/02-scenarios/patient-record-retrieval' },
+          { text: 'S2. 환자 진료 기록 작성 및 조회', link: '/ko/02-scenarios/patient-record-creation' },
           { text: 'S3. 연구 데이터셋 생성', link: '/ko/02-scenarios/research-dataset-generation' },
         ],
       },
