@@ -5,7 +5,7 @@ title: Security Requirements & Threat Modeling
 # Security Requirements & Threat Modeling
 
 > English version is in progress.
-> Please refer to the [Korean version](/ko/05-threat-modeling) for the full documentation.
+> Please refer to the [Korean version](/ko/05-threat-modeling/) for the full documentation.
 
 ## Planned Sections
 
