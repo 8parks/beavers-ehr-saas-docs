@@ -61,7 +61,7 @@ const koSidebar = [
     ],
   },
   {
-    text: '위협 모델링',
+    text: '5. 위협 모델링',
     items: [
       { text: '보안 목표', link: '/ko/05-threat-modeling#security-objectives' },
       { text: '위협 모델링 방법론', link: '/ko/05-threat-modeling#methodology' },
@@ -150,7 +150,7 @@ export default defineConfig({
               { text: '시나리오', link: '/ko/02-scenarios/' },
               { text: 'ADR', link: '/ko/03-adr/' },
               { text: '컴플라이언스', link: '/ko/04-compliance' },
-              { text: '위협 모델링', link: '/ko/05-threat-modeling' },
+              { text: '5. 위협 모델링', link: '/ko/05-threat-modeling' },
               { text: '운영 가이드', link: '/ko/06-runbook' },
               { text: '참고 자료', link: '/ko/07-references' },
             ],
