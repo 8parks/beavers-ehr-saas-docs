@@ -1,3 +1,10 @@
+.custom-block.white {
+  background-color: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+
 .vp-doc ul.contains-task-list {
   list-style: none;
   padding-left: 1rem;

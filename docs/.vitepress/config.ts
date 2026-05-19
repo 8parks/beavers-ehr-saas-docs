@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress'
 // @ts-ignore
 import taskLists from 'markdown-it-task-lists'
+// @ts-ignore
+import container from 'markdown-it-container'
 
 const koSidebar = [
   {
@@ -158,6 +160,15 @@ export default defineConfig({
   markdown: {
     config: (md) => {
       md.use(taskLists, { enabled: true })
+      md.use(container, 'white', {
+        render(tokens: any[], idx: number) {
+          const token = tokens[idx]
+          const title = token.info.trim().slice('white'.length).trim()
+          return token.nesting === 1
+            ? `<div class="custom-block white">${title ? `<p class="custom-block-title">${title}</p>` : ''}\n`
+            : '</div>\n'
+        },
+      })
     },
   },
 
