@@ -1,3 +1,8 @@
+.vp-doc ul.contains-task-list {
+  list-style: none;
+  padding-left: 1rem;
+}
+
 .tm-page--assets .vp-doc table th:nth-child(1),
 .tm-page--assets .vp-doc table td:nth-child(1),
 .tm-page--trust-boundaries .vp-doc table th:nth-child(1),

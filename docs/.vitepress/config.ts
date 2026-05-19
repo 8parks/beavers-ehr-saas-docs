@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress'
+// @ts-ignore
+import taskLists from 'markdown-it-task-lists'
 
 const koSidebar = [
   {
@@ -17,9 +19,9 @@ const koSidebar = [
         text: '비즈니스 시나리오',
         collapsed: false,
         items: [
-          { text: 'S1. 환자 정보 조회', link: '/ko/02-scenarios/patient-record-retrieval' },
-          { text: 'S2. 환자 진료 기록 작성 및 조회', link: '/ko/02-scenarios/patient-record-creation' },
-          { text: 'S3. 연구 데이터셋 생성', link: '/ko/02-scenarios/research-dataset-generation' },
+          { text: 'S1. 환자 정보 조회', link: '/ko/02-scenarios/s1-patient-record-retrieval' },
+          { text: 'S2. 환자 진료 기록 작성 및 조회', link: '/ko/02-scenarios/s2-patient-record-creation' },
+          { text: 'S3. 연구 데이터셋 생성', link: '/ko/02-scenarios/s3-research-dataset-generation' },
         ],
       },
       {
@@ -41,7 +43,7 @@ const koSidebar = [
     ],
   },
   {
-    text: '멀티테넌트 설계 전략 (ADR)',
+    text: '멀티테넌트 설계 전략',
     items: [
       { text: 'ADR 개요 및 작성 원칙', link: '/ko/03-adr/' },
       { text: '멀티테넌트 전략', link: '/ko/03-adr/multitenant-strategy' },
@@ -153,6 +155,12 @@ export default defineConfig({
   description: 'AWS Native EHR SaaS 보안 아키텍처 가이드',
   base: '/beavers-ehr-saas-docs/',
 
+  markdown: {
+    config: (md) => {
+      md.use(taskLists, { enabled: true })
+    },
+  },
+
   locales: {
     ko: {
       label: '한국어',
@@ -163,9 +171,9 @@ export default defineConfig({
             text: '문서',
             items: [
               { text: '시나리오', link: '/ko/02-scenarios/' },
-              { text: 'ADR', link: '/ko/03-adr/' },
+              { text: '설계 전략', link: '/ko/03-adr/' },
               { text: '컴플라이언스', link: '/ko/04-compliance' },
-              { text: '5. 위협 모델링', link: '/ko/05-threat-modeling/' },
+              { text: '위협 모델링', link: '/ko/05-threat-modeling/' },
               { text: '운영 가이드', link: '/ko/06-runbook' },
               { text: '참고 자료', link: '/ko/07-references' },
             ],
