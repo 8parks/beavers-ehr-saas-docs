@@ -63,8 +63,12 @@ const koSidebar = [
   {
     text: '위협 모델링',
     items: [
-      { text: '보안 목표', link: '/ko/05-threat-modeling#보안-목표' },
-      { text: '위협 모델링', link: '/ko/05-threat-modeling#위협-모델링' },
+      { text: '보안 목표', link: '/ko/05-threat-modeling#security-objectives' },
+      { text: '위협 모델링 방법론', link: '/ko/05-threat-modeling#methodology' },
+      { text: '자산 식별', link: '/ko/05-threat-modeling#assets' },
+      { text: '신뢰 경계', link: '/ko/05-threat-modeling#trust-boundaries' },
+      { text: '위협 시나리오 카탈로그', link: '/ko/05-threat-modeling#threat-scenarios' },
+      { text: '위협별 대응 전략', link: '/ko/05-threat-modeling#mitigations' },
     ],
   },
   {
