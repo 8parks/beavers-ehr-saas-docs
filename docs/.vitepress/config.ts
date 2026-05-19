@@ -61,7 +61,7 @@ const koSidebar = [
     ],
   },
   {
-    text: '5. 위협 모델링',
+    text: '위협 모델링',
     items: [
       { text: '개요', link: '/ko/05-threat-modeling/' },
       { text: '보안 목표', link: '/ko/05-threat-modeling/01-security-objectives' },
