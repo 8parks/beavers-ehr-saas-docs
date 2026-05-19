@@ -17,7 +17,7 @@ outline: [2, 4]
 
 인증 토큰 자체가 정상 발급되었더라도, 계정 상태와 claim 일관성이 깨진 상태에서 계속 사용되면 중대한 권한 우회가 발생한다.
 
-## 검토 대상 구현
+## 검토 대상
 
 - Cognito user pool authorizer와 API Gateway route별 scope 설정
 - Pre Token Generation trigger 또는 동등한 claim 조정 경로

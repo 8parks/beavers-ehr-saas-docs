@@ -17,7 +17,7 @@ outline: [2, 4]
 
 PHI 유출 자체뿐 아니라, 유출 의심 상황에서 적시에 차단·조사·통지·재발방지를 수행하지 못하는 상태도 독립 위협으로 관리해야 한다.
 
-## 검토 대상 구현
+## 검토 대상
 
 - CloudTrail, app audit, SSM 세션 로그, KMS usage log, S3 data event 수집 경로
 - 세션 무효화, presigned URL 폐기, tenant 일시 중지, key/secret 회전 절차

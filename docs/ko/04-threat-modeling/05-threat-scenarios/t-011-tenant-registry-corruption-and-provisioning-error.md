@@ -17,7 +17,7 @@ outline: [2, 4]
 
 `tenant_registry`는 schema, prefix, tenant 상태를 결정하는 기준 데이터다. 이 값이 잘못 생성되거나 무단 변경되면 개별 요청이 아니라 구조 전체의 격리가 실패한다.
 
-## 검토 대상 구현
+## 검토 대상
 
 - tenant registry 데이터 저장소
 - 모든 애플리케이션 함수의 tenant registry 조회 경로

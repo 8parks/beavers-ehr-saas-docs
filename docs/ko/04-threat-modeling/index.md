@@ -5,13 +5,13 @@ outline: [2, 3]
 
 # 위협 모델링
 
-> 본 장은 멀티테넌트 EHR SaaS 아키텍처의 배포 적합성을 판단하기 위한 위협 모델과 통제 기준을 정의한다.
+> 본 섹션은 멀티테넌트 EHR SaaS 아키텍처의 배포 적합성을 판단하기 위한 위협 모델과 통제 기준을 정의한다.
 
 ## 목적
 
-본 장은 설계 검토, 구현 검토, 배포 승인, 운영 변경 심사에 공통 적용하는 통제 기준서다. 따라서 본 장에 수록되는 위협은 자산, 신뢰 경계, 권한 모델, 운영 절차를 기준으로 실제 워크로드에서 성립 가능하거나 명시적으로 배제되어야 하는 실패 모드로 한정한다.
+본 섹션은 설계 검토, 구현 검토, 배포 승인, 운영 변경 심사에 공통 적용하는 통제 기준서다. 따라서 본 섹션에 수록되는 위협은 자산, 신뢰 경계, 권한 모델, 운영 절차를 기준으로 실제 워크로드에서 성립 가능하거나 명시적으로 배제되어야 하는 실패 모드로 한정한다.
 
-본 장이 답하려는 질문은 다음과 같다.
+본 섹션이 답하려는 질문은 다음과 같다.
 
 - 어떤 자산이 의료 서비스 관점에서 핵심 보호 대상인가
 - 어떤 경계에서 인증, 인가, 격리, 감사의 신뢰가 다시 검증되어야 하는가
@@ -35,7 +35,7 @@ outline: [2, 3]
 
 ## 작성 기준
 
-본 장은 다음 공식 레퍼런스를 기준으로 구성하였다.
+본 섹션은 다음 공식 레퍼런스를 기준으로 구성하였다.
 
 - [OWASP Threat Modeling Process](https://owasp.org/www-community/Threat_Modeling_Process)
 - [OWASP Threat Modeling Overview](https://owasp.org/www-community/Threat_Modeling)
@@ -43,7 +43,7 @@ outline: [2, 3]
 - [AWS Prescriptive Guidance for Presigned URLs](https://docs.aws.amazon.com/prescriptive-guidance/latest/presigned-url-best-practices/introduction.html)
 - [Microsoft STRIDE guidance](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)
 
-본 장은 위 레퍼런스를 일반 원칙으로 삼되, EHR SaaS, 멀티테넌트 격리, 연구 데이터셋 제공, 비상 접근, 규제 보고라는 본 프로젝트의 워크로드와 운영 모델에 맞추어 위협 진술과 통제 기준을 재구성하였다.
+본 섹션은 위 레퍼런스를 일반 원칙으로 삼되, EHR SaaS, 멀티테넌트 격리, 연구 데이터셋 제공, 비상 접근, 규제 보고라는 본 가이드라인의 워크로드와 운영 모델에 맞추어 위협 진술과 통제 기준을 재구성하였다.
 
 ## 문서 구성
 

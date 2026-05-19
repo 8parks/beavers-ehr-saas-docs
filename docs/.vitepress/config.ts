@@ -47,7 +47,7 @@ const koSidebar = [
   {
     text: '위협 모델링(워크로드 중심으로)',
     items: [
-      { text: '장 개요', link: '/ko/04-threat-modeling/' },
+      { text: '개요', link: '/ko/04-threat-modeling/' },
       { text: '보안 목표', link: '/ko/04-threat-modeling/01-security-objectives' },
       { text: '위협 모델링 방법론', link: '/ko/04-threat-modeling/02-methodology' },
       { text: '자산 식별', link: '/ko/04-threat-modeling/03-assets' },

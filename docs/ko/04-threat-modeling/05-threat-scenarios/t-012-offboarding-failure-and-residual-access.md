@@ -17,7 +17,7 @@ outline: [2, 4]
 
 오프보딩은 계정 삭제만으로 끝나지 않는다. 세션, presigned URL, dataset artifact, export, backup, cache가 남아 있으면 계약 종료 후에도 접근이 지속될 수 있다.
 
-## 검토 대상 구현
+## 검토 대상
 
 - Cognito 사용자 비활성화와 세션 회수 절차
 - `tenant_registry.status` 전이 절차와 오프보딩 승인 기록

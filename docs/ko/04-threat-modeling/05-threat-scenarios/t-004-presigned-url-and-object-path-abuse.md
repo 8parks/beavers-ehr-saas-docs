@@ -17,7 +17,7 @@ outline: [2, 4]
 
 Presigned URL은 필요한 기능이지만, URL 발급 조건과 object key 구속이 느슨하면 원본 PHI 또는 연구 데이터셋의 우회 반출 경로가 된다.
 
-## 검토 대상 구현
+## 검토 대상
 
 - 임상 파일 버킷에 대한 direct upload 또는 download presign 발급 로직
 - 연구 데이터셋 버킷에 대한 dataset delivery 경로와 presign 발급 로직

@@ -17,7 +17,7 @@ outline: [2, 4]
 
 가용성 사고는 단순 중단 문제에 그치지 않는다. 복구 과정에서 RLS, schema binding, key access, 감사 로깅이 깨지면 복구 이후 더 심각한 보안 사고가 발생할 수 있다.
 
-## 검토 대상 구현
+## 검토 대상
 
 - 환자 정보용 Aurora cluster, 진료 기록용 Aurora cluster, reader instance
 - RDS Proxy 연결 경로와 애플리케이션 재연결 절차

@@ -7,7 +7,7 @@ outline: [2, 4]
 
 ## 적용 원칙
 
-본 장은 단일 프레임워크를 기계적으로 적용하지 않는다. 기본 절차는 OWASP 위협 모델링 프로세스를 따르되, 운영 유지관리 원칙은 AWS Well-Architected를 따른다. 분류 체계는 STRIDE와 LINDDUN을 병행한다. 그 이유는 본 프로젝트가 일반적인 웹 애플리케이션 위협뿐 아니라, 가명정보 제공과 재식별 가능성까지 동시에 다루기 때문이다.
+본 섹션은 단일 프레임워크를 기계적으로 적용하지 않는다. 기본 절차는 OWASP 위협 모델링 프로세스를 따르되, 운영 유지관리 원칙은 AWS Well-Architected를 따른다. 분류 체계는 STRIDE와 LINDDUN을 병행한다. 그 이유는 본 가이드라인이 일반적인 웹 애플리케이션 위협뿐 아니라, 가명정보 제공과 재식별 가능성까지 동시에 다루기 때문이다.
 
 적용 순서는 다음과 같다.
 
@@ -20,7 +20,7 @@ outline: [2, 4]
 
 ## 위협 진술 작성 규칙
 
-본 장에서 개별 위협을 문서화할 때는 다음 규칙을 적용한다.
+본 섹션에서 개별 위협을 문서화할 때는 다음 규칙을 적용한다.
 
 - 위협은 반드시 특정 자산과 특정 신뢰 경계에 매핑되어야 한다.
 - 위협은 공격자 관점의 남용 경로 또는 운영 실패 관점의 실패 모드로 서술한다.
@@ -29,9 +29,9 @@ outline: [2, 4]
 
 ## OWASP 기반 절차 적용
 
-[OWASP Threat Modeling Process](https://owasp.org/www-community/Threat_Modeling_Process)는 위협 모델링을 `범위 정의`, `위협 식별`, `대응책 정의`, `평가`의 네 단계로 설명한다. 본 장은 이를 다음과 같이 적용한다.
+[OWASP Threat Modeling Process](https://owasp.org/www-community/Threat_Modeling_Process)는 위협 모델링을 `범위 정의`, `위협 식별`, `대응책 정의`, `평가`의 네 단계로 설명한다. 본 섹션은 이를 다음과 같이 적용한다.
 
-| OWASP 단계 | 본 프로젝트에서의 적용 방식 |
+| OWASP 단계 | 본 가이드라인에서의 적용 방식 |
 |-----------|---------------------------|
 | Scope your work | `S1`부터 `S7`까지의 워크로드, 관련 자산, 관련 역할, 데이터 흐름을 정의한다. |
 | Determine threats | STRIDE와 LINDDUN을 이용해 cross-tenant 접근, 권한 상승, 재식별, 비상 접근 남용 등 위협을 식별한다. |
@@ -40,9 +40,9 @@ outline: [2, 4]
 
 ## STRIDE 적용
 
-[Microsoft STRIDE guidance](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)는 위협을 `Spoofing`, `Tampering`, `Repudiation`, `Information Disclosure`, `Denial of Service`, `Elevation of Privilege`로 분류한다. 본 프로젝트에서는 다음과 같이 해석한다.
+[Microsoft STRIDE guidance](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)는 위협을 `Spoofing`, `Tampering`, `Repudiation`, `Information Disclosure`, `Denial of Service`, `Elevation of Privilege`로 분류한다. 본 가이드라인에서는 다음과 같이 해석한다.
 
-| 범주 | 본 프로젝트에서의 주요 검토 질문 |
+| 범주 | 본 가이드라인에서의 주요 검토 질문 |
 |------|----------------------------|
 | Spoofing | 잘못된 JWT claim, 탈취된 token, 비상용 자격증명으로 의료진 또는 운영자를 사칭할 수 있는가 |
 | Tampering | 진료 기록, 승인 상태, 감사 로그, 가명처리 결과물이 무단 변경될 수 있는가 |
@@ -53,9 +53,9 @@ outline: [2, 4]
 
 ## LINDDUN 적용
 
-연구 데이터셋과 감사 메타데이터는 STRIDE만으로 충분히 설명되지 않는다. 본 프로젝트는 가명정보 제공과 재식별 가능성을 다루므로, 데이터 제공 범위와 반복 추출에 따른 Privacy 위험을 별도로 평가해야 한다.
+연구 데이터셋과 감사 메타데이터는 STRIDE만으로 충분히 설명되지 않는다. 본 가이드라인은 가명정보 제공과 재식별 가능성을 다루므로, 데이터 제공 범위와 반복 추출에 따른 Privacy 위험을 별도로 평가해야 한다.
 
-| 범주 | 본 프로젝트에서의 주요 검토 질문 |
+| 범주 | 본 가이드라인에서의 주요 검토 질문 |
 |------|----------------------------|
 | Linkability | 서로 다른 dataset 또는 로그를 결합해 동일 개인 또는 동일 사건을 연결할 수 있는가 |
 | Identifiability | 직접 식별자 제거 후에도 개인 식별이 가능한가 |
@@ -66,7 +66,7 @@ outline: [2, 4]
 
 ## 위험도 산정 기준
 
-본 장은 정량 점수 대신 `높음`, `중간`, `낮음`의 정성 등급을 사용한다. 이는 현재 프로젝트 단계에서 합리적인 비교와 배포 판단을 지원하기에 충분하기 때문이다. 다만 위협 시나리오 카탈로그에는 설계 또는 배포 판단에 영향을 주지 않는 경미한 위협을 수록하지 않으므로, 전체 분포는 고위험과 중위험에 집중될 수 있다. 등급은 다음 요소를 함께 고려해 결정한다.
+본 섹션은 정량 점수 대신 `높음`, `중간`, `낮음`의 정성 등급을 사용한다. 이는 현재 가이드라인 단계에서 합리적인 비교와 배포 판단을 지원하기에 충분하기 때문이다. 다만 위협 시나리오 카탈로그에는 설계 또는 배포 판단에 영향을 주지 않는 경미한 위협을 수록하지 않으므로, 전체 분포는 고위험과 중위험에 집중될 수 있다. 등급은 다음 요소를 함께 고려해 결정한다.
 
 - 기밀성, 무결성, 가용성, Privacy, Accountability 영향
 - 환자 안전 및 진료 지속성 영향
@@ -94,7 +94,7 @@ outline: [2, 4]
 
 ## 유지관리 원칙
 
-[AWS Well-Architected SEC01-BP07](https://docs.aws.amazon.com/wellarchitected/2022-03-31/framework/sec_securely_operate_threat_model.html)은 위협 모델을 최신 상태의 등록부로 유지하고, 위협과 완화책을 우선순위화할 것을 요구한다. 본 프로젝트는 다음 원칙을 따른다.
+[AWS Well-Architected SEC01-BP07](https://docs.aws.amazon.com/wellarchitected/2022-03-31/framework/sec_securely_operate_threat_model.html)은 위협 모델을 최신 상태의 등록부로 유지하고, 위협과 완화책을 우선순위화할 것을 요구한다. 본 가이드라인은 다음 원칙을 따른다.
 
 - 위협 모델은 일회성 보고서가 아니라 운영 중 유지되는 등록부로 관리한다.
 - 신규 Tenant 유형, 신규 연구 데이터셋 유형, 신규 운영 경로가 추가되면 즉시 갱신한다.
