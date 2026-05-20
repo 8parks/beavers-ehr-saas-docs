@@ -4,19 +4,19 @@ title: 레퍼런스 아키텍처
 
 # 레퍼런스 아키텍처
 
-> 통합 AWS 아키텍처와 주요 구성 요소가 어떻게 함께 작동하는지 설명합니다.
+> 해당 섹션에서 통합 AWS 아키텍처와 전체 서비스의 주요 구성 요소가 어떻게 함께 작동하는지 설명합니다.
 
-## 고수준 아키텍처
+## 전체 아키텍처 다이어그램
 
 <!-- 작성 예정: 통합 AWS 아키텍처 다이어그램 -->
 
-> 다이어그램 자리표시자: 통합 AWS 아키텍처 다이어그램 (작성 예정)
+> 다이어그램 넣을 곳: 통합 AWS 아키텍처 다이어그램
 
 ## 계정 및 네트워크 구조
 
 이 설계는 두 가지 주요 AWS 계정 환경으로 구분됩니다.
 
-### 관리 계정 (Administrator Account)
+### 관리 계정
 
 중앙화된 보안 서비스 및 자동화 구성 요소를 포함합니다.
 
@@ -25,7 +25,6 @@ title: 레퍼런스 아키텍처
 | AWS Config | 리소스 구성 상태 지속 평가 |
 | AWS Security Hub | 보안 이상 탐지 결과 집계 |
 | Amazon EventBridge | 이벤트 라우팅 및 자동화 트리거 |
-| Amazon SQS | 이벤트 큐잉 |
 | AWS Lambda | 전처리 및 대응 로직 |
 | Amazon DynamoDB | 이력/상태 저장 |
 | Amazon SNS | 알림 및 티켓 생성 |
@@ -34,7 +33,7 @@ title: 레퍼런스 아키텍처
 | Amazon S3 | 로그 및 이력 보관 |
 | IAM 역할 | 오케스트레이션 및 대응 역할 |
 
-### 멤버 계정 (Member Account)
+### 멤버 계정
 
 애플리케이션 또는 고객 리소스 환경을 나타냅니다.
 
@@ -50,17 +49,68 @@ title: 레퍼런스 아키텍처
 
 ### VPC 및 네트워크 설계
 
-<!-- 작성 예정: VPC 설계, 서브넷 전략, VPC 엔드포인트 전략 -->
+#### Subnet 구조
 
-- 프라이빗 서브넷 전략
-- VPC 엔드포인트 전략
-- 보안 그룹 설계
+멤버 계정 VPC는 두 단계의 프라이빗 서브넷으로 구성하며, 모든 레이어를 Multi-AZ로 배치합니다. API 진입점은 VPC 외부의 관리형 서비스(API Gateway)를 사용합니다. NAT Gateway는 외부 전자서명 솔루션 연동을 위한 아웃바운드 전용으로만 존재합니다.
+
+```
+Internet
+    │                                    ↑ (전자서명 솔루션 아웃바운드 전용)
+CloudFront → WAF → API Gateway      [Public Subnet] NAT Gateway
+         (관리형, VPC 외부)               ↑
+    │                                    │
+[Private App Subnet]    Lambda (VPC-enabled), RDS Proxy
+    │
+[Private DB Subnet]     Aurora PostgreSQL (Multi-AZ)
+```
+
+- Lambda는 VPC에 연결하여 RDS Proxy 및 VPC 엔드포인트에만 접근하며 인터넷에 직접 노출되지 않습니다.
+- Aurora는 프라이빗 DB 서브넷에만 배치하며 RDS Proxy를 통해서만 접근합니다.
+- AWS 서비스(KMS, Secrets Manager 등) 접근은 모두 VPC 엔드포인트를 통해 VPC 내부에서 처리합니다.
+- NAT Gateway는 외부 전자서명 솔루션 API 호출 시 아웃바운드 경로로만 사용하며, 인바운드 인터넷 트래픽은 허용하지 않습니다.
+
+#### VPC 엔드포인트 전략
+
+인터넷을 경유하지 않고 AWS 서비스에 접근하기 위해 VPC 엔드포인트를 사용합니다. PHI 관련 데이터와 자격증명이 VPC 외부로 노출되지 않도록 합니다.
+
+| 서비스 | 엔드포인트 타입 | 용도 |
+|--------|--------------|------|
+| Amazon S3 | Gateway | 로그 저장, PHI 문서 저장 |
+| Amazon DynamoDB | Gateway | 테넌트 상태 및 이력 저장 |
+| AWS KMS | Interface | 암호화·복호화·서명 |
+| AWS Secrets Manager | Interface | DB 자격증명 런타임 조회 |
+| Amazon CloudWatch Logs | Interface | Lambda 로그 전송 |
+| AWS SSM | Interface | Runbook 실행, 파라미터 조회 |
+| AWS STS | Interface | IAM Role AssumeRole |
+| AWS Lambda | Interface | Lambda → Lambda 내부 호출 |
+
+::: tip
+Gateway 엔드포인트(S3, DynamoDB)는 추가 비용 없이 사용할 수 있습니다. Interface 엔드포인트는 시간당 요금이 발생하지만, PHI 데이터가 인터넷을 경유하지 않도록 하는 보안 요구사항을 만족하기 위해 필수적으로 적용합니다.
+:::
+
+#### 보안 그룹 설계
+
+최소 권한 원칙에 따라 각 레이어 간 트래픽을 명시적으로 허용합니다.
+
+| 보안 그룹 | 인바운드 허용 | 아웃바운드 허용 |
+|-----------|-------------|--------------|
+| Lambda SG | API Gateway (관리형, VPC 외부) | RDS Proxy SG 5432, VPC Endpoint SG 443 |
+| RDS Proxy SG | Lambda SG 5432 | Aurora SG 5432 |
+| Aurora SG | RDS Proxy SG 5432 | 없음 |
+| VPC Endpoint SG | Lambda SG 443 | 없음 |
+
+#### NACL 설계
+
+보안 그룹과 함께 NACL을 이중 방어선으로 적용합니다.
+
+| 서브넷 | 인바운드 허용 | 아웃바운드 허용 |
+|--------|-------------|--------------|
+| Private App Subnet | VPC 내부 (API Gateway 트리거는 관리형) | VPC 내부, 임시 포트 |
+| Private DB Subnet | Private App Subnet 5432만 | Private App Subnet 임시 포트 |
 
 ## 핵심 애플리케이션 흐름
 
-<!-- 작성 예정: 핵심 요청 흐름 다이어그램 -->
-
-애플리케이션 아키텍처 주요 구성 요소:
+애플리케이션 아키텍처의 주요 구성 요소는 다음과 같습니다. 
 
 | AWS 서비스 | 역할 |
 |-----------|------|
@@ -68,7 +118,7 @@ title: 레퍼런스 아키텍처
 | Amazon S3 | 정적 웹 호스팅, 문서 저장 |
 | AWS WAF | 웹 애플리케이션 방화벽 |
 | Amazon Cognito | 사용자 인증 |
-| Amazon API Gateway / ALB | API 진입점 |
+| Amazon API Gateway | API 진입점 |
 | AWS Lambda | 비즈니스 로직 및 테넌트 검증 |
 | Amazon RDS / Aurora PostgreSQL | EHR 데이터 저장 |
 | AWS KMS | 암호화 및 디지털 서명 |
@@ -109,8 +159,13 @@ AWS Config → Security Hub → EventBridge → Lambda → SSM Automation Runboo
 | API 감사 | AWS CloudTrail | 모든 API 호출 기록 |
 | 애플리케이션 로그 | Amazon CloudWatch | 애플리케이션 이벤트 모니터링 |
 | 웹 보호 | AWS WAF | 웹 공격 방어 |
+| DDoS 방어 | AWS Shield Advanced | CloudFront·API Gateway 레이어 DDoS 차단 |
 | 구성 모니터링 | AWS Config | 구성 드리프트 탐지 |
 | 이상 탐지 집계 | AWS Security Hub | 보안 결과 중앙화 |
+| PHI 자동 탐지 | Amazon Macie | S3 내 민감 데이터 식별 및 분류 |
+| 취약점 스캔 | AWS Inspector | Lambda 함수 및 패키지 취약점 자동 평가 |
+| 백업 및 복구 | AWS Backup | Aurora·S3 백업 정책 중앙 관리, 복구 검증 |
 | 로그 불변성 | S3 Object Lock | 감사 로그 변조 방지 |
 
-> 다이어그램 자리표시자: 계정 분리 다이어그램 (작성 예정)
+
+<!-- 작성 예정: 보안 다이어그램 -->
