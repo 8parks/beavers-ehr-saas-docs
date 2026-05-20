@@ -15,7 +15,7 @@ outline: [2, 4]
 | 관련 경계 | `TB-04`, `TB-07` |
 | 대표 행위자 | 장애 대응자, 복구 자동화, failover 경로 |
 
-가용성 사고는 단순 중단 문제에 그치지 않는다. 복구 과정에서 RLS, schema binding, key access, 감사 로깅이 깨지면 복구 이후 더 심각한 보안 사고가 발생할 수 있다.
+가용성 사고는 단순 중단 문제에 그치지 않습니다. 복구 과정에서 RLS, schema binding, key access, 감사 로깅이 깨지면 복구 이후 더 심각한 보안 사고가 발생할 수 있습니다.
 
 ## 검토 대상
 
@@ -27,41 +27,41 @@ outline: [2, 4]
 
 ## 공격 성립 조건
 
-- DR runbook이 가용성 복구만 다루고 tenant isolation 검증을 포함하지 않는다.
-- snapshot restore 후 schema, RLS, parameter drift 검증이 없다.
-- 장애 대응 중 임시 권한이 과도하게 부여된다.
-- failover 시 writer/reader 전환과 애플리케이션 재연결 검증이 없다.
+- DR runbook이 가용성 복구만 다루고 tenant isolation 검증을 포함하지 않습니다.
+- snapshot restore 후 schema, RLS, parameter drift 검증이 없습니다.
+- 장애 대응 중 임시 권한이 과도하게 부여됩니다.
+- failover 시 writer/reader 전환과 애플리케이션 재연결 검증이 없습니다.
 
 ## 위협 전개
 
-1. Aurora writer 장애 또는 restore 이벤트가 발생한다.
-2. 애플리케이션은 복구를 위해 우회 경로나 수동 접근을 사용한다.
-3. 복구된 DB에서 RLS, schema mapping, 감사 로깅 중 일부가 누락되면 정상 트래픽이 보안 결함 상태로 재개된다.
+1. Aurora writer 장애 또는 restore 이벤트가 발생합니다.
+2. 애플리케이션은 복구를 위해 우회 경로나 수동 접근을 사용합니다.
+3. 복구된 DB에서 RLS, schema mapping, 감사 로깅 중 일부가 누락되면 정상 트래픽이 보안 결함 상태로 재개됩니다.
 
 ## 필수 예방 통제
 
-- DR runbook에 tenant isolation, RLS, schema, key access, 감사 로깅 검증 항목을 포함한다.
-- 복구용 권한과 평상시 권한을 분리한다.
-- failover와 restore 절차를 정기적으로 rehearsal 한다.
-- 백업은 암호화되고, 복구 권한은 최소화되어야 한다.
+- DR runbook에 tenant isolation, RLS, schema, key access, 감사 로깅 검증 항목을 포함합니다.
+- 복구용 권한과 평상시 권한을 분리합니다.
+- failover와 restore 절차를 정기적으로 리허설합니다.
+- 백업은 암호화되고, 복구 권한은 최소화되어야 합니다.
 
 ## 필수 탐지 통제
 
-- failover 실패, restore drift, 복구 후 cross-tenant 테스트 실패를 경보화한다.
-- 복구 과정에서 임시 권한 부여 이벤트를 추적한다.
-- 복구 직후 app audit와 CloudTrail의 연속성을 확인한다.
+- failover 실패, restore drift, 복구 후 cross-tenant 테스트 실패를 경보화합니다.
+- 복구 과정에서 임시 권한 부여 이벤트를 추적합니다.
+- 복구 직후 app audit와 CloudTrail의 연속성을 확인합니다.
 
 ## 대응 요구사항
 
-- 복구된 환경을 즉시 제한 모드로 두고 tenant isolation 검증을 수행한다.
-- 잘못된 권한이나 설정 drift를 수정한 뒤에만 정상 트래픽을 재개한다.
-- 복구 과정 전체를 포렌식 보존 대상으로 취급한다.
+- 복구된 환경을 즉시 제한 모드로 두고 tenant isolation 검증을 수행합니다.
+- 잘못된 권한이나 설정 drift를 수정한 뒤에만 정상 트래픽을 재개합니다.
+- 복구 과정 전체를 포렌식 보존 대상으로 취급합니다.
 
 ## 검증 기준
 
-- DR drill에는 가용성 검증 외에 cross-tenant 음성 테스트가 포함되어야 한다.
-- restore 후 RLS와 schema binding이 유지되는지 증명할 수 있어야 한다.
-- 복구 중 감사 로그 공백이 발생하지 않아야 한다.
+- DR drill에는 가용성 검증 외에 cross-tenant 음성 테스트가 포함되어야 합니다.
+- restore 후 RLS와 schema binding이 유지되는지 증명할 수 있어야 합니다.
+- 복구 중 감사 로그 공백이 발생하지 않아야 합니다.
 
 ## 요구 증빙 및 검증 주기
 
@@ -74,5 +74,5 @@ outline: [2, 4]
 
 ## 배포 차단 조건
 
-- DR runbook에 tenant isolation 검증이 없으면 배포를 중단한다.
-- restore 후 보안 설정 drift를 자동 또는 수동으로 확인할 수 없으면 배포를 승인하지 않는다.
+- DR runbook에 tenant isolation 검증이 없으면 배포를 중단합니다.
+- restore 후 보안 설정 drift를 자동 또는 수동으로 확인할 수 없으면 배포를 승인하지 않습니다.

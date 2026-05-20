@@ -73,10 +73,10 @@ const koSidebar = [
       { text: '자산 식별', link: '/ko/05-threat-modeling/03-assets' },
       { text: '신뢰 경계', link: '/ko/05-threat-modeling/04-trust-boundaries' },
       {
-        text: '위협 시나리오 카탈로그',
-        link: '/ko/05-threat-modeling/05-threat-scenarios/',
+        text: '위협 모델링 시나리오',
         collapsed: true,
         items: [
+          { text: '카탈로그', link: '/ko/05-threat-modeling/05-threat-scenarios/' },
           { text: 'T-01 Cross-Tenant Access', link: '/ko/05-threat-modeling/05-threat-scenarios/t-001-cross-tenant-access' },
           { text: 'T-02 동일 테넌트 내부 권한 상승', link: '/ko/05-threat-modeling/05-threat-scenarios/t-002-intra-tenant-privilege-escalation' },
           { text: 'T-03 의료 기록 무단 수정 및 전자서명 우회', link: '/ko/05-threat-modeling/05-threat-scenarios/t-003-record-tampering-and-signature-bypass' },
@@ -99,10 +99,52 @@ const koSidebar = [
   {
     text: '운영 가이드 (Runbook)',
     items: [
-      { text: 'Tenant 라이프사이클', link: '/ko/06-runbook#tenant-라이프사이클' },
-      { text: '자격증명 및 키 관리', link: '/ko/06-runbook#자격증명-및-키-관리' },
-      { text: '사고 대응', link: '/ko/06-runbook#사고-대응' },
-      { text: '정기 점검 및 검증', link: '/ko/06-runbook#정기-점검-및-검증' },
+      { text: '개요', link: '/ko/06-runbook/' },
+      {
+        text: 'Tenant 라이프사이클',
+        collapsed: false,
+        items: [
+          { text: '상태 전이 규칙', link: '/ko/06-runbook/01-tenant-lifecycle#state-transition-rules' },
+          { text: '온보딩', link: '/ko/06-runbook/01-tenant-lifecycle#tenant-onboarding' },
+          { text: '오프보딩', link: '/ko/06-runbook/01-tenant-lifecycle#tenant-offboarding' },
+          { text: 'Tenant 중지', link: '/ko/06-runbook/01-tenant-lifecycle#tenant-suspension' },
+        ],
+      },
+      {
+        text: '자격증명 및 키 관리',
+        collapsed: false,
+        items: [
+          { text: '공통 원칙', link: '/ko/06-runbook/02-credentials-and-key-management#shared-principles' },
+          { text: '기준 주기', link: '/ko/06-runbook/02-credentials-and-key-management#rotation-baseline' },
+          { text: '역할 분리', link: '/ko/06-runbook/02-credentials-and-key-management#duty-separation' },
+          { text: '키 교체', link: '/ko/06-runbook/02-credentials-and-key-management#key-rotation' },
+          { text: '비상 회전 절차', link: '/ko/06-runbook/02-credentials-and-key-management#emergency-rotation' },
+        ],
+      },
+      {
+        text: '사고 대응',
+        collapsed: false,
+        items: [
+          { text: '역할 및 에스컬레이션', link: '/ko/06-runbook/03-incident-response#roles-and-escalation' },
+          { text: '중요도 분류', link: '/ko/06-runbook/03-incident-response#severity-classification' },
+          { text: '공통 초기 대응 규칙', link: '/ko/06-runbook/03-incident-response#initial-response-rules' },
+          { text: '공통 증적 보존 체크리스트', link: '/ko/06-runbook/03-incident-response#evidence-preservation-checklist' },
+          { text: '복구 선언 공통 기준', link: '/ko/06-runbook/03-incident-response#recovery-declaration-baseline' },
+          { text: 'Cross-Tenant 접근', link: '/ko/06-runbook/03-incident-response#cross-tenant-access' },
+          { text: 'PHI 유출', link: '/ko/06-runbook/03-incident-response#phi-disclosure' },
+          { text: '자격증명 유출', link: '/ko/06-runbook/03-incident-response#credential-exposure' },
+        ],
+      },
+      {
+        text: '정기 점검 및 검증',
+        collapsed: false,
+        items: [
+          { text: '점검 책임', link: '/ko/06-runbook/04-periodic-review-and-validation#review-ownership' },
+          { text: '월간 점검', link: '/ko/06-runbook/04-periodic-review-and-validation#monthly-review' },
+          { text: '취약점 스캐닝', link: '/ko/06-runbook/04-periodic-review-and-validation#vulnerability-scanning' },
+          { text: '침투 테스트', link: '/ko/06-runbook/04-periodic-review-and-validation#penetration-testing' },
+        ],
+      },
     ],
   },
   {
@@ -191,7 +233,7 @@ export default defineConfig({
               { text: '설계 전략', link: '/ko/03-adr/' },
               { text: '컴플라이언스', link: '/ko/04-compliance' },
               { text: '위협 모델링', link: '/ko/05-threat-modeling/' },
-              { text: '운영 가이드', link: '/ko/06-runbook' },
+              { text: '운영 가이드', link: '/ko/06-runbook/' },
               { text: '참고 자료', link: '/ko/07-references' },
             ],
           },
