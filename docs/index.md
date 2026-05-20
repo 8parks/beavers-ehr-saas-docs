@@ -10,7 +10,7 @@ hero:
       text: 한국어
       link: /ko/
     - theme: alt
-      text: English (작성 예정)
+      text: English (TBD)
       link: /en/
 
 features:
