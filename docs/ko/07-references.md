@@ -8,12 +8,12 @@ title: 7. 참고 자료
 
 ### 국내 규제
 
-- [개인정보보호법 — 개인정보보호위원회](https://www.pipc.go.kr/)
-- [의료법 — 법제처](https://www.law.go.kr/)
+- [개인정보보호법 -개인정보보호위원회](https://www.pipc.go.kr/)
+- [의료법 - 법제처](https://www.law.go.kr/)
 
 ### 해외 규제
 
-- [HIPAA — 미국 보건부 (HHS)](https://www.hhs.gov/hipaa/index.html)
+- [HIPAA - 미국 보건부 (HHS)](https://www.hhs.gov/hipaa/index.html)
 - [HITECH Act](https://www.hhs.gov/hipaa/for-professionals/special-topics/hitech-act-enforcement-interim-final-rule/index.html)
 - [45 CFR Part 160 and Part 164](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C)
 
@@ -27,7 +27,7 @@ title: 7. 참고 자료
 
 ## 아키텍처 및 보안 레퍼런스 {#아키텍처-및-보안-레퍼런스}
 
-- [AWS Well-Architected Framework — 보안 기반](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html)
+- [AWS Well-Architected Framework - 보안 기반](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html)
 - [AWS HIPAA 컴플라이언스 리소스](https://aws.amazon.com/compliance/hipaa-compliance/)
 - [AWS Config 문서](https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html)
 - [AWS Security Hub 문서](https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html)
@@ -54,6 +54,7 @@ title: 7. 참고 자료
 
 | 날짜 | 변경 내용 | 작성자 |
 |------|---------|-------|
+| 2026-05-20 | 전체 초안 작성 | 4aaS |
 | 2026-05 | 초기 문서 구조 작성 | — |
 
 <!-- 작성 예정: 주요 변경 이력 추가 -->

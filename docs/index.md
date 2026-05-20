@@ -10,7 +10,7 @@ hero:
       text: 한국어
       link: /ko/
     - theme: alt
-      text: English (작성 예정)
+      text: English (TBD)
       link: /en/
 
 features:
@@ -23,12 +23,3 @@ features:
   - title: 검증 준비
     details: 검증 체크리스트 형태로 설계 사항을 제공해 보안 엔지니어링 실무에 가깝게 접근합니다.
 ---
-
-## 언어 선택 / Language
-
-이 문서는 한국어와 영어 두 가지 언어로 제공됩니다.
-
-| 언어 | 상태 | 링크 |
-|------|------|------|
-| 한국어 | 제공 중 | [문서 보기 →](/ko/) |
-| English | TBD | [View Docs →](/en/) |

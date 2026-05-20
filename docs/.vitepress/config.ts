@@ -47,7 +47,7 @@ const koSidebar = [
   {
     text: '멀티테넌트 설계 전략',
     items: [
-      { text: 'ADR 개요 및 작성 원칙', link: '/ko/03-adr/' },
+      { text: '멀티테넌트 설계 전략 개요', link: '/ko/03-adr/' },
       { text: '멀티테넌트 전략', link: '/ko/03-adr/multitenant-strategy' },
       { text: '인증 / 인가 전략', link: '/ko/03-adr/auth-strategy' },
       { text: '데이터 및 스토리지 전략', link: '/ko/03-adr/data-storage-strategy' },
@@ -74,7 +74,7 @@ const koSidebar = [
       { text: '신뢰 경계', link: '/ko/05-threat-modeling/04-trust-boundaries' },
       {
         text: '위협 모델링 시나리오',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: '카탈로그', link: '/ko/05-threat-modeling/05-threat-scenarios/' },
           { text: 'T-01 Cross-Tenant Access', link: '/ko/05-threat-modeling/05-threat-scenarios/t-001-cross-tenant-access' },
