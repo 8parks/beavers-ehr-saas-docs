@@ -28,10 +28,10 @@ outline: [2, 3]
 
 ## 문서 구성
 
-- [1. Tenant 라이프사이클](/ko/06-runbook/01-tenant-lifecycle)
-- [2. 자격증명 및 키 관리](/ko/06-runbook/02-credentials-and-key-management)
-- [3. 사고 대응](/ko/06-runbook/03-incident-response)
-- [4. 정기 점검 및 검증](/ko/06-runbook/04-periodic-review-and-validation)
+- [Tenant 라이프사이클](/ko/06-runbook/01-tenant-lifecycle)
+- [자격증명 및 키 관리](/ko/06-runbook/02-credentials-and-key-management)
+- [사고 대응](/ko/06-runbook/03-incident-response)
+- [정기 점검 및 검증](/ko/06-runbook/04-periodic-review-and-validation)
 
 ## 역할 및 승인 체계
 
