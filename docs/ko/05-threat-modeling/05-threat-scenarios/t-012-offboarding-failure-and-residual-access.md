@@ -15,7 +15,7 @@ outline: [2, 4]
 | 관련 경계 | `TB-02`, `TB-05`, `TB-06`, `TB-07`, `TB-08` |
 | 대표 행위자 | 오프보딩 대상 사용자, 과거 연구 수신자, 운영자 |
 
-오프보딩은 계정 삭제만으로 끝나지 않습니다. 세션, presigned URL, dataset artifact, export, backup, cache가 남아 있으면 계약 종료 후에도 접근이 지속될 수 있습니다.
+오프보딩은 계정 삭제만으로 끝나지 않습니다. 세션, 데이터셋 전달 권한, dataset artifact, export, backup, cache가 남아 있으면 계약 종료 후에도 접근이 지속될 수 있습니다.
 
 ## 검토 대상
 
@@ -23,7 +23,7 @@ outline: [2, 4]
 - `tenant_registry.status` 전이 절차와 오프보딩 승인 기록
 - 임상 파일 버킷과 연구 데이터셋 버킷의 tenant 관련 객체와 export 파일
 - 데이터셋 요청·승인 상태 저장소의 잔존 request와 artifact 참조
-- 미만료 presigned URL, cache, backup 식별 정보, break-glass 예외 권한 회수 절차
+- 활성화된 데이터셋 전달 권한, cache, backup 식별 정보, break-glass 예외 권한 회수 절차
 
 ## 공격 성립 조건
 
@@ -35,20 +35,20 @@ outline: [2, 4]
 ## 위협 전개
 
 1. tenant 오프보딩이 시작되어 일부 계정만 비활성화됩니다.
-2. 기존 token, presigned URL, dataset object, export 파일이 남아 있습니다.
+2. 기존 token, 활성 전달 경로, dataset object, export 파일이 남아 있습니다.
 3. 계약 종료 이후에도 데이터 접근 또는 재다운로드가 가능해집니다.
 
 ## 필수 예방 통제
 
 - 오프보딩을 `계정 회수`, `세션 폐기`, `데이터 export`, `데이터 파기`, `파기 검증`으로 분리합니다.
-- 파기 자산 목록에 S3 객체, DB schema, generated dataset, cache, 미만료 URL, backup 식별 정보를 포함합니다.
+- 파기 자산 목록에 S3 객체, DB schema, generated dataset, cache, 활성 전달 권한, backup 식별 정보를 포함합니다.
 - 유예 기간과 최종 파기 시점을 문서화합니다.
 - 오프보딩 진행 중에는 tenant 상태를 `SUSPENDED` 등으로 전환해 신규 접근을 차단합니다.
 
 ## 필수 탐지 통제
 
 - 비활성 tenant의 API 호출을 탐지합니다.
-- 잔존 object, orphaned account, 미만료 URL을 점검합니다.
+- 잔존 object, orphaned account, 활성 전달 권한을 점검합니다.
 - 오프보딩 완료 후 일정 기간 동안 후속 접근 시도를 모니터링합니다.
 
 ## 대응 요구사항
@@ -69,7 +69,7 @@ outline: [2, 4]
 |----------|----------|------|
 | 오프보딩 체크리스트 | 계정 회수, 세션 폐기, export 제공, 파기, 검증 단계 | 오프보딩 시마다 |
 | 파기 증적 | DB schema, S3 객체, dataset artifact, cache, export 삭제 결과 | 오프보딩 시마다 |
-| post-offboarding 음성 테스트 | 기존 계정, 기존 token, 기존 URL로 접근 시도한 결과 | 오프보딩 시마다 |
+| post-offboarding 음성 테스트 | 기존 계정, 기존 token, 기존 전달 경로로 접근 시도한 결과 | 오프보딩 시마다 |
 | 예외 보유 현황 | backup 보존, 법적 보존, 분쟁 보존 등 잔존 사유와 만료 시점 | 월간 |
 
 ## 배포 차단 조건
