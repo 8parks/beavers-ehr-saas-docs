@@ -23,7 +23,7 @@ const koSidebar = [
         items: [
           { text: 'S1. 환자 정보 조회', link: '/ko/02-scenarios/s1-patient-record-retrieval' },
           { text: 'S2. 환자 진료 기록 작성 및 조회', link: '/ko/02-scenarios/s2-patient-record-creation' },
-          { text: 'S3. 연구 데이터셋 생성', link: '/ko/02-scenarios/s3-research-dataset-generation' },
+          { text: 'S3. 연구기관용 데이터셋 생성 및 제공', link: '/ko/02-scenarios/s3-research-dataset-generation' },
         ],
       },
       {
