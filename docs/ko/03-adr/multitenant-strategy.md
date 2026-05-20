@@ -2,13 +2,11 @@
 title: 멀티테넌트 전략
 ---
 
-# 멀티테넌트 전략
-
-**상태:** 제안됨
+# 핵심 멀티테넌트 전략
 
 여러 병원이 같은 플랫폼을 쓰면서도 서로의 데이터에 접근할 수 없도록 하는 것이 이 설계의 핵심입니다. 애플리케이션 레이어의 tenant 검증만으로는 충분하지 않으며, DB 계층·캐시·로그·파일 저장 등 모든 데이터 접근 경로에서 tenant 격리를 강제해야 합니다.
 
-> JWT 기반 tenant 클레임 검증과 인가 전략은 [3.3 인증/인가 전략](./auth-strategy)에서, Tenant Provisioning·Lifecycle 관리는 [3.6 운영 및 라이프사이클 전략](./operations-strategy)에서 다룹니다.
+> JWT 기반 tenant 클레임 검증과 인가 전략은 [인증/인가 전략](./auth-strategy)에서, Tenant Provisioning·Lifecycle 관리는 [운영 및 라이프사이클 전략](./operations-strategy)에서 다룹니다.
 
 ---
 
@@ -91,13 +89,15 @@ IAM Database Authentication도 추가 인증 레이어로 검토 가능하다.
 ```sql
 -- 요청 처리 시작
 BEGIN;
+SET LOCAL search_path = hospital_a;
 SET LOCAL app.current_tenant = 'hospital_a';
 
 SELECT * FROM patient_records
 WHERE tenant_id = current_setting('app.current_tenant');
 
 COMMIT;
--- transaction 종료 시 SET LOCAL 값은 자동 해제됨
+-- transaction 종료 시 SET LOCAL 값은 모두 자동 해제됨
+-- search_path도 트랜잭션 로컬이므로 RDS Proxy connection 반환 후 오염 없음
 ```
 
 RLS 정책 예시:
@@ -109,8 +109,6 @@ CREATE POLICY tenant_isolation_policy
   ON patient_records
   USING (tenant_id = current_setting('app.current_tenant'));
 ```
-
-Connection pool(RDS Proxy 등) 사용 시 `RESET ALL` 또는 명시적 reset을 수행해 tenant contamination을 방지한다.
 
 ---
 
@@ -214,12 +212,12 @@ GuardDuty는 AWS 계정·네트워크 수준 이상행위 탐지에 활용하며
 
 ---
 
-## 미해결 질문
+## 추가 고민할 지점
 
-- **RDS Proxy와 Schema-per-Tenant 호환성**: connection pool 환경에서 `search_path`, session variable 관리 방법
 - **RLS 성능**: 복잡한 JOIN 쿼리에서 RLS policy 적용이 성능에 미치는 영향
 - **대규모 테넌트 확장**: 수십~수백 개 tenant schema 운영 시 schema 관리 자동화 방법
-- **비상 접근 시 tenant 격리**: break-glass 상황에서 tenant 격리 원칙을 어떻게 유지할 것인가 (→ [3.6 운영 전략](./operations-strategy))
+
+> Break-glass 상황에서의 tenant 격리 원칙은 [운영 및 라이프사이클 전략 — Break-glass 비상 접근](./operations-strategy#4-break-glass-비상-접근)에서 다룬다.
 
 ---
 

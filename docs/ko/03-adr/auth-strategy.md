@@ -4,9 +4,7 @@ title: 인증 / 인가 전략
 
 # 인증 / 인가 전략
 
-**상태:** 제안됨
-
-누가, 어느 테넌트의, 어떤 데이터에 접근할 수 있는지를 어떻게 판단할 것인가에 대한 결정입니다. 인증은 Cognito가 담당하고, 인가는 JWT 클레임 기반으로 서비스 레이어에서 처리합니다. 자격증명과 암호화 키는 코드에 포함하지 않고 Secrets Manager와 KMS로 관리합니다.
+누가, 어느 테넌트의, 어떤 데이터에 접근할 수 있는지를 어떻게 판단할 것인가에 대한 전략입니다. 인증은 Cognito가 담당하고, 인가는 JWT 클레임 기반으로 서비스 레이어에서 처리합니다. 자격증명과 암호화 키는 코드에 포함하지 않고 Secrets Manager와 KMS로 관리합니다.
 
 ---
 
@@ -56,7 +54,7 @@ custom:tenant_id 존재 및 비어 있지 않음
 cognito:groups 에 허용된 역할 포함
 ```
 
-**Lambda 내부 defense-in-depth 검증 흐름**
+**Lambda 내부 심층 방어(defense-in-depth) 검증 흐름**
 ```
 API Gateway Authorizer → JWT 서명 검증 통과
   → Lambda 진입 시 claim 재확인
@@ -98,7 +96,7 @@ API Gateway Authorizer → JWT 서명 검증 통과
 ### 기술적 요구사항
 
 - Lambda Authorizer 또는 서비스 레이어에서 role + tenant_id 동시 검증
-- API 경로별 허용 역할 화이트리스트 관리
+- API 경로별 허용 역할 목록 관리
 - 역할이 없거나 허용되지 않은 역할이면 403 반환
 - 동일 tenant_id가 아닌 리소스 접근 시도는 [tenant mismatch 이벤트](./multitenant-strategy#4-cross-tenant-접근-시도-탐지-및-대응)로 기록
 
@@ -154,9 +152,9 @@ Lambda 시작
 
 - secret은 Lambda별로 분리 (예: `ehr/patient-lambda/db-credentials`)
 - IAM role에는 해당 secret ARN에 대한 `secretsmanager:GetSecretValue`만 허용
-- Secrets Manager의 자동 rotation 정책 적용 가능
+- Secrets Manager 자동 교체 정책 적용 가능
 
-### KMS Customer Managed Key (CMK) 설계
+### KMS 고객 관리형 키(CMK) 설계
 
 AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시적으로 제어할 수 있고, CloudTrail에서 모든 키 사용 이력을 감사할 수 있다.
 
@@ -169,9 +167,9 @@ AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시
 | Secrets Manager 암호화 | `ehr-secrets-cmk` | 각 Lambda role (secret별로 권한 분리) |
 
 **CMK 정책 원칙**
-- 각 CMK의 Key Policy에 접근 허용 IAM role을 명시
+- 각 CMK의 키 정책에 접근 허용 IAM role을 명시
 - SaaS 운영자도 기본적으로 CMK로 암호화된 PHI에 직접 접근 불가
-- 연간 자동 key rotation 활성화
+- 연간 자동 키 교체 활성화
 - CloudTrail에서 `kms:Decrypt`, `kms:Encrypt` 호출 이력 감사
 
 ### 기술적 요구사항
@@ -180,14 +178,14 @@ AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시
 - 환경변수 또는 코드에 자격증명 하드코딩 금지
 - Secrets Manager에서 런타임 자격증명 조회
 - Aurora, S3, CloudWatch Logs, Secrets Manager에 CMK 적용
-- Key Policy로 접근 주체 명시
+- 키 정책으로 접근 주체 명시
 
 ---
 
-## 미해결 질문
+## 추가 고민할 지점
 
 - **Cognito Custom Attribute vs Group**: `custom:tenant_id`를 Custom Attribute로 관리할지, Group 이름에 인코딩할지 (현재는 Custom Attribute 방향)
-- **JWT 토큰 만료 정책**: ID Token / Access Token 만료 시간과 Refresh Token 갱신 주기
+- **JWT 토큰 만료 정책**: ID Token / Access Token 만료 시간과 리프레시 토큰 갱신 주기
 - **토큰 취소(revocation)**: 즉시 접근 차단이 필요한 시나리오에서의 처리 방법
 - **CMK 범위**: tenant별 CMK 분리 여부 (비용 vs 격리 수준 트레이드오프)
 - **Lambda Authorizer 캐싱**: Authorizer 응답 캐시 TTL 설정과 취소된 토큰 감지 간의 트레이드오프
