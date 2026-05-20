@@ -40,7 +40,6 @@ outline: [2, 3]
 - [OWASP Threat Modeling Process](https://owasp.org/www-community/Threat_Modeling_Process)
 - [OWASP Threat Modeling Overview](https://owasp.org/www-community/Threat_Modeling)
 - [AWS Well-Architected SEC01-BP07](https://docs.aws.amazon.com/wellarchitected/2022-03-31/framework/sec_securely_operate_threat_model.html)
-- [AWS Prescriptive Guidance for Presigned URLs](https://docs.aws.amazon.com/prescriptive-guidance/latest/presigned-url-best-practices/introduction.html)
 - [Microsoft STRIDE guidance](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)
 
 본 섹션은 위 레퍼런스를 일반 원칙으로 삼되, EHR SaaS, 멀티테넌트 격리, 연구 데이터셋 제공, 비상 접근, 규제 보고라는 본 가이드라인의 워크로드와 운영 모델에 맞추어 위협 진술과 통제 기준을 재구성했습니다.

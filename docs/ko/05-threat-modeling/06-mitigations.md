@@ -20,7 +20,7 @@ outline: [2, 4]
 | `T-01` | Cross-Tenant Access | `tenant_registry` allowlist, explicit schema binding, RLS, tenant-bound object key | cross-tenant 음성 테스트, 403 패턴 탐지 | 세션 무효화, 영향 tenant 범위 산정, 사고 조사 |
 | `T-02` | 동일 테넌트 내부 권한 상승 | 역할 매트릭스, patient-level ABAC, tenant type 분리 | 비정상 차트 접근, 승인 우회 호출 탐지 | 계정 비활성화, 권한 재설계, 접근 이력 조사 |
 | `T-03` | 의료 기록 무단 수정 및 전자서명 우회 | canonical payload 서명, immutable change log, attachment hash/version binding | 서명 검증 실패, 비정상 write 탐지 | 영향 record 복구, 법적 보존, 원인 분석 |
-| `T-04` | Presigned URL 및 객체 경로 남용 | 짧은 TTL, 상태 재검증, tenant-bound object key, 파일 검증 | CloudTrail data event, 이상 다운로드 탐지 | URL 폐기, 객체 격리, 반출 범위 산정 |
+| `T-04` | 데이터 전달 경로 및 객체 경로 오남용 | 전달 상태 재검증, tenant-bound object key, VPC endpoint 정책 제한, 파일 검증 | CloudTrail data event, 이상 다운로드 탐지, endpoint 정책 변경 탐지 | 전달 경로 차단, 객체 격리, 반출 범위 산정 |
 | `T-05` | 인증 토큰 재사용 및 Claim 불일치 | access token 검증, claim coherence 검증, 세션 폐기 | 철회 token 재사용, 이상 위치 접근 탐지 | 세션 무효화, 재인증, 영향 범위 조사 |
 | `T-06` | 재식별 공격 | field allowlist, threshold, suppression, 반복 추출 위험 평가 | 작은 코호트 및 반복 요청 탐지 | dataset 폐기, 재가명처리, 제공 중단 |
 | `T-07` | 비밀정보 및 자격증명 노출 | Secrets Manager, 최소 권한 IAM, rotation 정책 | `GetSecretValue` 이상 탐지, 누출 스캔 | secret 회전, 세션 폐기, 원인 추적 |
@@ -48,7 +48,7 @@ outline: [2, 4]
 | `T-01` | 애플리케이션 보안 설계 책임자 | cross-tenant 음성 테스트 결과, `tenant_registry` 매핑 검토 기록, RLS 적용 증빙 | 매 릴리스, DR 후 즉시 |
 | `T-02` | IAM/애플리케이션 인가 책임자 | 역할 매트릭스, route-scope 매핑, role change 회귀 테스트 | 매 릴리스 |
 | `T-03` | 임상 데이터 무결성 책임자 | canonical payload 정의서, KMS 서명 검증 결과, 변경 이력 표본 | 매 릴리스, 월간 표본 점검 |
-| `T-04` | 스토리지 보안 책임자 | presigned URL TTL 정책, object key 규칙, S3 data event 로그 표본 | 매 릴리스, 월간 로그 점검 |
+| `T-04` | 스토리지 보안 책임자 | 데이터셋 전달 상태 검증 규칙, object key 규칙, S3/VPC endpoint 정책 검토 기록, data event 로그 표본 | 매 릴리스, 월간 로그 점검 |
 | `T-05` | 인증 체계 책임자 | token TTL 설정, 계정 비활성화·역할 변경 회귀 테스트, 세션 회수 절차 | 매 릴리스 |
 | `T-06` | 데이터 거버넌스 책임자 | field allowlist, cohort threshold 기준, 반복 추출 검토 기록, 산출물 표본 검토 | 요청 유형 변경 시, 월간 |
 | `T-07` | 비밀정보 관리 책임자 | secret inventory, IAM read policy 검토, rotation 실행 기록 | 월간, 회전 시마다 |
@@ -72,7 +72,7 @@ outline: [2, 4]
 
 - 기록 생성은 인가된 의료진만 수행할 수 있어야 하며, 병원 관리자는 기본적으로 차트 생성 권한을 갖지 않아야 합니다.
 - record 본문과 attachment metadata는 동일한 무결성 모델로 보호되어야 합니다.
-- presigned URL 기반 업로드는 파일 무결성과 tenant-bound 경로 통제를 함께 가져야 합니다.
+- 첨부파일 저장 및 조회 경로는 파일 무결성과 tenant-bound 경로 통제를 함께 가져야 합니다.
 
 ### `S3. 연구기관용 데이터셋 생성 및 제공`
 
@@ -89,7 +89,7 @@ outline: [2, 4]
 ### `S5. Tenant 오프보딩`
 
 - 계정 비활성화와 데이터 파기를 동일 단계로 처리해서는 안 됩니다.
-- DB schema, S3 객체, generated dataset, presigned URL, cache, backup 식별 정보까지 범위에 포함해야 합니다.
+- DB schema, S3 객체, generated dataset, 데이터셋 전달 권한, cache, backup 식별 정보까지 범위에 포함해야 합니다.
 - 파기 증적과 예외 승인 절차를 함께 남겨야 합니다.
 
 ### `S6. 운영자 비상 접근`
@@ -113,7 +113,7 @@ outline: [2, 4]
 - 가명처리 기준이 정의되지 않았거나 placeholder 처리만으로 dataset이 생성됩니다.
 - SaaS 운영자 또는 일반 운영 role에 PHI 관련 KMS `Decrypt` 권한이 있습니다.
 - `tenant_registry` 변경이 승인과 감사 없이 수행됩니다.
-- 오프보딩된 tenant의 세션, presigned URL, dataset artifact가 남아 있습니다.
+- 오프보딩된 tenant의 세션, 데이터셋 전달 권한, dataset artifact가 남아 있습니다.
 - PHI 조회, 수정, 다운로드 이벤트가 애플리케이션 감사 로그에 남지 않습니다.
 - CloudTrail 또는 app audit가 중단되어 사고 후 증적 확보가 불가능합니다.
 - break-glass 접근이 승인, 세션 로깅, 자격증명 만료 없이 상시 가능합니다.
