@@ -8,7 +8,7 @@ title: 레퍼런스 아키텍처
 
 ## 전체 아키텍처 다이어그램
 
-![전체 아키텍처 다이어그램](/beavers-ehr-saas-docs/architecture-diagram.png)
+![전체 아키텍처 다이어그램](/architecture-diagram.png)
 
 > 본 다이어그램은 지속적으로 추가 검증하고 수정할 예정입니다.
 
