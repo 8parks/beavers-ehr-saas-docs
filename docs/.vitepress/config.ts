@@ -59,9 +59,23 @@ const koSidebar = [
     text: '컴플라이언스',
     items: [
       { text: '적용 규제 범위', link: '/ko/04-compliance#적용-규제-범위' },
-      { text: '책임 공유 및 계약 범위', link: '/ko/04-compliance#책임-공유-및-계약-범위' },
-      { text: '통제 영역별 매핑', link: '/ko/04-compliance#통제-영역별-매핑' },
-      { text: '보안 요구사항 총정리', link: '/ko/04-compliance#보안-요구사항-총정리' },
+      {
+        text: '보안 통제 항목',
+        collapsed: false,
+        items: [
+          { text: '책임 공유 및 계약 범위', link: '/ko/04-compliance#책임-공유-및-계약-범위' },
+          { text: 'PHI에 대한 정의 및 보호 정리', link: '/ko/04-compliance#phi에-대한-정의-및-보호-정리' },
+          { text: '가명정보에 대한 정의 및 보호 정리', link: '/ko/04-compliance#가명정보에-대한-정의-및-보호-정리' },
+          { text: '인증', link: '/ko/04-compliance#인증' },
+          { text: '접근통제', link: '/ko/04-compliance#접근통제' },
+          { text: '데이터 저장', link: '/ko/04-compliance#데이터-저장' },
+          { text: '암호화', link: '/ko/04-compliance#암호화' },
+          { text: '감사 로그', link: '/ko/04-compliance#감사-로그' },
+          { text: '탐지', link: '/ko/04-compliance#탐지' },
+          { text: '백업 및 재해복구', link: '/ko/04-compliance#백업-및-재해복구' },
+          { text: 'NPRM 선제대응 및 향후 고도화 계획', link: '/ko/04-compliance#nprm-선제대응-및-향후-고도화-계획' },
+        ],
+      },
     ],
   },
   {

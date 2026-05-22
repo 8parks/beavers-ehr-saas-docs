@@ -1,5 +1,6 @@
 ---
 title: 시스템 컨텍스트 & 가정
+pageClass: page--system-context
 ---
 
 # 시스템 컨텍스트 & 가정
