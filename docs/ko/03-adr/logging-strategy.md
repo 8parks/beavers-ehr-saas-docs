@@ -11,11 +11,11 @@ title: 로깅 및 감사 전략
 
 ### 설계 원칙
 
-멀티테넌트 격리는 DB에서만 끝나지 않는다. 실제 운영 환경에서는 캐시, 로그, 임시 파일, export 파일, 분석 결과, 알림 메시지에도 tenant 정보가 포함될 수 있다. 이 영역에서 tenant 분리가 누락되면 DB가 안전해도 데이터가 우회적으로 노출될 수 있다.
+멀티테넌트 격리는 DB에서만 끝나지 않습니다. 실제 운영 환경에서는 캐시, 로그, 임시 파일, export 파일, 분석 결과, 알림 메시지에도 tenant 정보가 포함될 수 있습니다. 이 영역에서 tenant 분리가 누락되면 DB가 안전해도 데이터가 우회적으로 노출될 수 있습니다.
 
 ### 결정
 
-**S3 prefix, 캐시 key, CloudWatch Logs 필드에 tenant_id를 포함하여 모든 저장 경로에서 테넌트 경계를 유지한다. 로그에는 PHI 원문을 기록하지 않는다.**
+**S3 prefix, 캐시 key, CloudWatch Logs 필드에 tenant_id를 포함하여 모든 저장 경로에서 테넌트 경계를 유지합니다. 로그에는 PHI 원문을 기록하지 않습니다.**
 
 ### AWS 구현
 
@@ -54,11 +54,11 @@ s3://ehr-audit-logs/tenants/{tenant_id}/logs/{date}/...
 
 ### 설계 원칙
 
-의료 데이터 접근 이력은 법적 증거로 사용될 수 있으므로, 로그는 저장된 이후 변조되거나 삭제되면 안 된다. 로그 무결성은 S3 Object Lock과 KMS 암호화로 보장한다.
+의료 데이터 접근 이력은 법적 증거로 사용될 수 있으므로, 로그는 저장된 이후 변조되거나 삭제되면 안 됩니다. 로그 무결성은 S3 Object Lock과 KMS 암호화로 보장합니다.
 
 ### 결정
 
-**감사 로그는 S3 Compliance Mode Object Lock이 적용된 전용 버킷에 보관하며, KMS CMK로 암호화한다. CloudTrail과 CloudWatch Logs를 이중으로 수집한다.**
+**감사 로그는 S3 Compliance Mode Object Lock이 적용된 전용 버킷에 보관하며, KMS CMK로 암호화합니다. CloudTrail과 CloudWatch Logs를 이중으로 수집합니다.**
 
 ### 구현
 
@@ -82,11 +82,11 @@ s3://ehr-audit-logs/tenants/{tenant_id}/logs/{date}/...
 
 ### 설계 원칙
 
-의료법과 규제에서 정한 보존 기간을 충족하면서, 보존 기간이 지난 로그는 비용 절감을 위해 자동으로 전환 또는 삭제한다.
+의료법과 규제에서 정한 보존 기간을 충족하면서, 보존 기간이 지난 로그는 비용 절감을 위해 자동으로 전환 또는 삭제합니다.
 
 ### 결정
 
-**의료법 기준 보존 기간을 기본으로 하되, S3 Intelligent-Tiering과 Glacier로 단계적 전환한다.**
+**의료법 기준 보존 기간을 기본으로 하되, S3 Intelligent-Tiering과 Glacier로 단계적 전환합니다.**
 
 | 로그 유형 | 보존 기간 | 근거 |
 |-----------|----------|------|
@@ -108,7 +108,7 @@ s3://ehr-audit-logs/tenants/{tenant_id}/logs/{date}/...
 
 ### 설계 원칙
 
-두 가지 레이어에서 이중으로 기록한다. CloudTrail은 AWS API 호출 레벨, CloudWatch Logs는 비즈니스 행위 레벨을 담당한다.
+두 가지 레이어에서 이중으로 기록합니다. CloudTrail은 AWS API 호출 레벨, CloudWatch Logs는 비즈니스 행위 레벨을 담당합니다.
 
 | 레이어 | 수단 | 기록 내용 |
 |--------|------|----------|
@@ -129,7 +129,7 @@ s3://ehr-audit-logs/tenants/{tenant_id}/logs/{date}/...
 
 ### Cross-tenant 접근 탐지
 
-tenant mismatch 이벤트는 별도 보안 이벤트로 기록하고 임계치 초과 시 즉시 알림을 발생시킨다. 구체적인 탐지 및 대응 흐름은 [멀티테넌트 전략: Cross-tenant 접근 탐지](./multitenant-strategy#4-cross-tenant-접근-시도-탐지-및-대응)를 참고한다.
+tenant mismatch 이벤트는 별도 보안 이벤트로 기록하고 임계치 초과 시 즉시 알림을 발생시킵니다. 구체적인 탐지 및 대응 흐름은 [멀티테넌트 전략: Cross-tenant 접근 탐지](./multitenant-strategy#4-cross-tenant-접근-시도-탐지-및-대응)를 참고합니다.
 
 > 각 이벤트가 어떤 규제 요구사항과 매핑되는지는 [컴플라이언스: 감사 로그](../04-compliance#감사-로그)를 참고합니다.
 
