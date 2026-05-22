@@ -65,18 +65,17 @@ RTO(목표 복구 시간)와 RPO(목표 복구 시점)를 사전에 정의하고
 
 
 ## 4. 보안 통제 및 규제
-<!-- 작성 예정: 링크 추가 예정-->
 
 | 통제 항목 | 수단 | 규제 |
 |---|---|---|
-| 백업 암호화 | Aurora automated backup·snapshot KMS CMK 암호화, KMS Interface Endpoint(VPC 내부 접근) | |
-| 복구 중 접근 차단 | `ehr-tenant-registry` status `SUSPENDED` 임시 변경, API 접근 차단 | |
-| 장애 탐지 | CloudWatch Alarm, 알림(병원 관리자) | |
-| 선택적 복구 | 영향 Tenant 스키마만 복원, 다른 Tenant 영향 없음 사전 검증 | |
-| 무결성 검증 | `tenant_id` 일치·레코드 수·체크섬·RLS policy 정상 작동 확인 | |
-| 보존 정책 | Aurora automated backup 보존 기간, S3 Object Lock retention, CloudTrail retention 서비스 정책 명시 | |
-| 감사 로그 | CloudTrail + CloudWatch Logs(복구 이력 전 과정), S3 Object Lock Compliance Mode(로그 위변조 방지) | |
-| 지속적 모니터링 | AWS Config(백업 정책 준수 여부), Security Hub(이상 탐지 집계) | |
+| 백업 암호화 | Aurora automated backup·snapshot KMS CMK 암호화, KMS Interface Endpoint(VPC 내부 접근) | [암호화](../04-compliance#암호화) |
+| 복구 중 접근 차단 | `ehr-tenant-registry` status `SUSPENDED` 임시 변경, API 접근 차단 | [접근통제](../04-compliance#접근통제) |
+| 장애 탐지 | CloudWatch Alarm, 알림(병원 관리자) | [탐지](../04-compliance#탐지) |
+| 선택적 복구 | 영향 Tenant 스키마만 복원, 다른 Tenant 영향 없음 사전 검증 | [백업 및 재해복구](../04-compliance#백업-및-재해복구) |
+| 무결성 검증 | `tenant_id` 일치·레코드 수·체크섬·RLS policy 정상 작동 확인 | [백업 및 재해복구](../04-compliance#백업-및-재해복구) |
+| 보존 정책 | Aurora automated backup 보존 기간, S3 Object Lock retention, CloudTrail retention 서비스 정책 명시 | [데이터 저장](../04-compliance#데이터-저장) |
+| 감사 로그 | CloudTrail + CloudWatch Logs(복구 이력 전 과정), S3 Object Lock Compliance Mode(로그 위변조 방지) | [감사 로그](../04-compliance#감사-로그) |
+| 지속적 모니터링 | AWS Config(백업 정책 준수 여부), Security Hub(이상 탐지 집계) | [탐지](../04-compliance#탐지) |
 
 
 ## 5. 보안 체크리스트

@@ -66,16 +66,15 @@ Aurora 스키마 DROP 전 다른 Tenant 스키마에 영향을 주지 않는지 
 
 
 ## 4. 보안 통제 및 규제
-<!-- 작성 예정: 규제 링크 연결 -->
 
 | 통제 항목 | 수단 | 규제 |
 |---|---|---|
-| 즉시 접근 차단 | DynamoDB `ehr-tenant-registry` status: SUSPENDED/DECOMMISSIONING, Cognito 계정 비활성화·그룹 제거·refresh token 무효화 | |
-| 단계적 파기 | Aurora 스키마 DROP, S3 Tenant Prefix 데이터 삭제(진료파일·데이터셋), DynamoDB Tenant 항목 삭제, 백업 스냅샷 보존 기간 확인 후 파기 | |
-| 보존 정책 준수 | Aurora automated backup·snapshot 보존 기간, S3 Object Lock retention, CloudTrail·audit log retention 확인 | |
-| 상태 관리 | `ACTIVE` → `SUSPENDED` → `DECOMMISSIONING` → `ARCHIVED` / `DELETED` 전이 | |
-| 다른 Tenant 영향 검증 | Aurora 스키마 DROP 전 사전 검증, S3 Prefix 범위 제한 | |
-| 감사 로그 | CloudTrail + CloudWatch Logs(비활성화·export·권한 회수·삭제·archive 전환 이력 전 과정 별도 보존), 파기 확인서 발급 | |
+| 즉시 접근 차단 | DynamoDB `ehr-tenant-registry` status: SUSPENDED/DECOMMISSIONING, Cognito 계정 비활성화·그룹 제거·refresh token 무효화 | [접근통제](../04-compliance#접근통제) |
+| 단계적 파기 | Aurora 스키마 DROP, S3 Tenant Prefix 데이터 삭제(진료파일·데이터셋), DynamoDB Tenant 항목 삭제, 백업 스냅샷 보존 기간 확인 후 파기 | [데이터 저장](../04-compliance#데이터-저장) |
+| 보존 정책 준수 | Aurora automated backup·snapshot 보존 기간, S3 Object Lock retention, CloudTrail·audit log retention 확인 | [데이터 저장](../04-compliance#데이터-저장) · [백업 및 재해복구](../04-compliance#백업-및-재해복구) |
+| 상태 관리 | `ACTIVE` → `SUSPENDED` → `DECOMMISSIONING` → `ARCHIVED` / `DELETED` 전이 | [접근통제](../04-compliance#접근통제) |
+| 다른 Tenant 영향 검증 | Aurora 스키마 DROP 전 사전 검증, S3 Prefix 범위 제한 | [접근통제](../04-compliance#접근통제) |
+| 감사 로그 | CloudTrail + CloudWatch Logs(비활성화·export·권한 회수·삭제·archive 전환 이력 전 과정 별도 보존), 파기 확인서 발급 | [감사 로그](../04-compliance#감사-로그) |
 
 ## 5. 보안 체크리스트
 
