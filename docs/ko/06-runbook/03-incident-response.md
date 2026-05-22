@@ -1,6 +1,7 @@
 ---
 title: 사고 대응
 outline: [2, 3]
+pageClass: runbook-page--incident-response
 ---
 
 # 사고 대응

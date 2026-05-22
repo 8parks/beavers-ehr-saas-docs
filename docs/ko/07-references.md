@@ -23,7 +23,6 @@ title: 7. 참고 자료
 - [OWASP Application Security Verification Standard (ASVS)](https://owasp.org/www-project-application-security-verification-standard/)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 
----
 
 ## 아키텍처 및 보안 레퍼런스 {#아키텍처-및-보안-레퍼런스}
 
@@ -38,7 +37,6 @@ title: 7. 참고 자료
 - [Amazon Aurora PostgreSQL 문서](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraPostgreSQL.html)
 - [Amazon S3 Object Lock 문서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html)
 
----
 
 ## 외부 기술 자료 {#외부-기술-자료}
 
@@ -48,7 +46,6 @@ title: 7. 참고 자료
 
 <!-- 작성 예정: 추가 참고 자료 -->
 
----
 
 ## 변경 이력 (Changelog) {#변경-이력}
 
