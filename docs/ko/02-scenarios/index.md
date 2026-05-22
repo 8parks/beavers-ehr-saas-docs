@@ -16,7 +16,6 @@ title: 시나리오 카탈로그
 | [S2. 환자 진료 기록 작성 및 조회](./s2-patient-record-creation) | 무결성 및 전자서명 |
 | [S3. 연구 데이터셋 생성](./s3-research-dataset-generation) | 가명처리 및 접근 통제 |
 
----
 
 ## 운영 시나리오
 
@@ -27,7 +26,6 @@ title: 시나리오 카탈로그
 | [S4. Tenant 온보딩](./s4-tenant-onboarding) | 테넌트 프로비저닝 및 권한 부여 |
 | [S5. Tenant 오프보딩](./s5-tenant-offboarding) | 데이터 파기 및 계정 비활성화 |
 
----
 
 ## 비상 / 장애 대응 시나리오
 
@@ -38,7 +36,6 @@ title: 시나리오 카탈로그
 | [S6. 운영자 비상 접근 (Break-glass)](./s6-break-glass) | 비상 접근 경로 및 감사 |
 | [S7. 데이터베이스 장애 및 복구](./s7-db-recovery) | 백업 및 재해복구 |
 
----
 
 ## 시나리오 문서 구조
 각 설계 문서는 다음 목차를 따릅니다. 
