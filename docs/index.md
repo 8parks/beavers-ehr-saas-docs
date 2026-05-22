@@ -24,11 +24,15 @@ features:
     details: 설계 사항을 검증 체크리스트 형태로 구조화하여 실제 보안 엔지니어링 실무 수준에서 점검할 수 있도록 합니다.
 ---
 
+<script setup>
+import { withBase } from 'vitepress'
+</script>
+
 <div class="about-section">
 
 ## About this Project
 
-<img src="/beavers-ehr-saas-docs/babybeavers-logo.png" alt="Baby Beavers" class="about-logo" />
+<img :src="withBase('/babybeavers-logo.png')" alt="Baby Beavers" class="about-logo" />
 
 [Beaver Dam 커뮤니티](https://beaver-dam.net/kr) 지원으로 [Baby Beavers 1기](https://baby.beaver-dam.net/kr)로 만나게 된 팀이 함께 진행한 프로젝트입니다.
 
