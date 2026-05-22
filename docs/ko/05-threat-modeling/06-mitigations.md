@@ -7,7 +7,7 @@ outline: [2, 4]
 
 ## 위협-통제 매트릭스
 
-본 절은 개별 위협 시나리오에 대해 어떤 통제가 반드시 준비되어야 하는지 정리합니다. 배포용 가이드라인이므로 “권장 사항”보다 “배포 차단 조건”을 우선합니다.
+본 절은 개별 위협 시나리오에 대해 어떤 통제가 반드시 준비되어야 하는지 정리합니다.
 
 통제는 다음 세 층으로 해석합니다.
 
@@ -17,7 +17,7 @@ outline: [2, 4]
 
 | 위협 ID | 위협 | 예방 통제 | 탐지 통제 | 대응 통제 |
 |---------|------|----------|----------|----------|
-| `T-01` | Cross-Tenant Access | `tenant_registry` allowlist, explicit schema binding, RLS, tenant-bound object key | cross-tenant 음성 테스트, 403 패턴 탐지 | 세션 무효화, 영향 tenant 범위 산정, 사고 조사 |
+| `T-01` | Cross-Tenant Access | `tenant_registry` allowlist, explicit schema binding, RLS, tenant-bound object key | cross-tenant 차단 테스트, 403 패턴 탐지 | 세션 무효화, 영향 tenant 범위 산정, 사고 조사 |
 | `T-02` | 동일 테넌트 내부 권한 상승 | 역할 매트릭스, patient-level ABAC, tenant type 분리 | 비정상 차트 접근, 승인 우회 호출 탐지 | 계정 비활성화, 권한 재설계, 접근 이력 조사 |
 | `T-03` | 의료 기록 무단 수정 및 전자서명 우회 | canonical payload 서명, immutable change log, attachment hash/version binding | 서명 검증 실패, 비정상 write 탐지 | 영향 record 복구, 법적 보존, 원인 분석 |
 | `T-04` | 데이터 전달 경로 및 객체 경로 오남용 | 전달 상태 재검증, tenant-bound object key, VPC endpoint 정책 제한, 파일 검증 | CloudTrail data event, 이상 다운로드 탐지, endpoint 정책 변경 탐지 | 전달 경로 차단, 객체 격리, 반출 범위 산정 |
@@ -39,13 +39,13 @@ outline: [2, 4]
 - 정책 증빙: 역할 매트릭스, break-glass 절차, 오프보딩 절차, 데이터셋 승인 기준
 - 구현 증빙: IAM policy, KMS key policy, Lambda 인가 로직, RLS 정책, S3 bucket policy
 - 운영 증빙: CloudTrail 설정, app audit 예시, session logging 예시, DR drill 결과
-- 검증 증빙: cross-tenant 음성 테스트, role matrix 테스트, dataset approval 흐름 테스트
+- 검증 증빙: cross-tenant 차단 테스트, role matrix 테스트, dataset approval 흐름 테스트
 
 ## 위협별 필수 증빙과 검증 주기
 
 | 위협 ID | 1차 소유자 | 필수 증빙 | 최소 검증 주기 |
 |---------|-----------|----------|----------------|
-| `T-01` | 애플리케이션 보안 설계 책임자 | cross-tenant 음성 테스트 결과, `tenant_registry` 매핑 검토 기록, RLS 적용 증빙 | 매 릴리스, DR 후 즉시 |
+| `T-01` | 애플리케이션 보안 설계 책임자 | cross-tenant 차단 테스트 결과, `tenant_registry` 매핑 검토 기록, RLS 적용 증빙 | 매 릴리스, DR 후 즉시 |
 | `T-02` | IAM/애플리케이션 인가 책임자 | 역할 매트릭스, route-scope 매핑, role change 회귀 테스트 | 매 릴리스 |
 | `T-03` | 임상 데이터 무결성 책임자 | canonical payload 정의서, KMS 서명 검증 결과, 변경 이력 표본 | 매 릴리스, 월간 표본 점검 |
 | `T-04` | 스토리지 보안 책임자 | 데이터셋 전달 상태 검증 규칙, object key 규칙, S3/VPC endpoint 정책 검토 기록, data event 로그 표본 | 매 릴리스, 월간 로그 점검 |
@@ -56,9 +56,9 @@ outline: [2, 4]
 | `T-09` | 운영 보안 책임자 | break-glass 승인 기록, SSM 세션 로그, 만료 확인 기록 | 사용 시마다, 월간 종합 검토 |
 | `T-10` | 감사 체계 책임자 | CloudTrail 설정 스냅샷, app audit 표본, delivery failure 알람 테스트 | 월간 |
 | `T-11` | Tenant 프로비저닝 책임자 | registry 변경 승인 기록, uniqueness 검증 결과, 정합성 점검 결과 | 변경 시마다, 주간 정합성 점검 |
-| `T-12` | 서비스 오프보딩 책임자 | 오프보딩 체크리스트, 파기 증적, post-offboarding 음성 테스트 결과 | 오프보딩 시마다 |
-| `T-13` | DR 책임자 | DR drill 결과, restore 후 isolation 테스트, 복구 중 로그 연속성 증빙 | 반기별 drill, 실제 복구 후 즉시 |
-| `T-14` | 사고 대응 책임자 | tabletop 결과, 증적 확보 체크리스트, 사고 지휘 체계 문서, 개선 조치 추적표 | 분기별 훈련, 사고 후 즉시 개정 |
+| `T-12` | 서비스 오프보딩 책임자 | 오프보딩 체크리스트, 파기 기록, post-offboarding 차단 테스트 결과 | 오프보딩 시마다 |
+| `T-13` | DR 책임자 | DR drill 결과, restore 후 isolation 테스트, 복구 중 로그 연속성 검토 기록 | 반기별 drill, 실제 복구 후 즉시 |
+| `T-14` | 사고 대응 책임자 | tabletop 결과, 기록 확보 체크리스트, 사고 지휘 체계 문서, 개선 조치 추적표 | 분기별 훈련, 사고 후 즉시 개정 |
 
 ## 워크로드별 필수 대응 전략
 
@@ -100,7 +100,7 @@ outline: [2, 4]
 ### `S7. 데이터베이스 장애 및 복구`
 
 - 복구 목표는 서비스 재개가 아니라 보안 속성을 유지한 상태의 재개입니다.
-- DR drill은 가용성 검증과 함께 cross-tenant 음성 테스트를 포함해야 합니다.
+- DR drill은 가용성 검증과 함께 cross-tenant 차단 테스트를 포함해야 합니다.
 
 ## 프로덕션 배포 차단 기준
 

@@ -26,26 +26,26 @@ outline: [2, 4]
 
 ## 공격 성립 조건
 
-- schema, prefix, tenant type, status 변경에 2인 검토가 없습니다.
-- 동일 schema 또는 동일 prefix 중복을 막는 검증이 없습니다.
-- 상태 전이가 `ACTIVE`, `SUSPENDED`, `OFFBOARDED` 간에 느슨하게 관리됩니다.
-- registry 변경 이력이 감사되지 않습니다.
+- schema, prefix, tenant type, status 변경에 2인 검토가 없음.
+- 동일 schema 또는 동일 prefix 중복을 막는 검증이 없음.
+- 상태 전이가 `ACTIVE`, `SUSPENDED`, `OFFBOARDED` 간에 느슨하게 관리됨.
+- registry 변경 이력이 감사되지 않음.
 
-## 위협 전개
+## 위협 시나리오
 
-1. 신규 tenant 온보딩 또는 기존 tenant 변경이 수행됩니다.
-2. 잘못된 schema 또는 prefix가 저장되거나 상태가 오염됩니다.
-3. Lambda는 이를 신뢰하고 DB schema, S3 prefix, dataset 경로를 선택합니다.
-4. 이후 요청은 구조적으로 잘못된 대상에 접근하게 됩니다.
+1. 신규 병원 온보딩이나 기존 병원 설정 변경 과정에서 `schema_name`, `clinical_file_prefix`, `tenant_type`, `status` 값이 잘못 입력되거나 자동화 스크립트가 오작동함.
+2. 변경이 승인 절차나 uniqueness 검증 없이 저장되면 tenant registry가 잘못된 값을 source of truth로 갖게 됨.
+3. 이후 Lambda는 해당 값을 신뢰하고 DB schema, S3 prefix, 데이터셋 전달 경로를 결정함.
+4. 그 결과 특정 API 하나의 결함이 아니라 구조 전체가 잘못된 대상에 접근하는 상태로 바뀌며, 여러 워크로드에서 연쇄적으로 격리 실패가 발생할 수 있음.
 
-## 필수 예방 통제
+## 필수 예방 사항
 
 - `tenant_registry`는 source of truth로 관리합니다.
 - 조건부 쓰기, uniqueness 검증, 상태 전이 규칙을 구현합니다.
 - 온보딩과 변경 절차에 승인과 변경 이력 보존을 포함합니다.
 - registry 값을 캐시하더라도 갱신 정책과 무효화 정책을 명시합니다.
 
-## 필수 탐지 통제
+## 필수 탐지 사항
 
 - registry 변경 이벤트를 별도 감사 대상으로 분류합니다.
 - schema/prefix 충돌, 비활성 tenant 접근, 상태 전이 이상을 탐지합니다.
@@ -63,7 +63,7 @@ outline: [2, 4]
 - `OFFBOARDED` tenant가 다시 `ACTIVE`가 되려면 별도 승인 절차가 필요해야 합니다.
 - registry 변경은 CloudTrail data event 또는 app audit에 남아야 합니다.
 
-## 요구 증빙 및 검증 주기
+## 운영 점검 항목 및 주기
 
 | 증빙 항목 | 최소 내용 | 주기 |
 |----------|----------|------|
@@ -71,8 +71,3 @@ outline: [2, 4]
 | uniqueness 검증 결과 | `schema_name`, `clinical_file_prefix`, `tenant_id` 중복 검사 결과 | 변경 시마다 |
 | 정합성 점검 결과 | registry 값과 실제 Aurora schema, S3 prefix, tenant 상태 일치 여부 | 주간 |
 | data event 표본 | tenant registry 변경에 대한 CloudTrail 또는 app audit 표본 | 월간 |
-
-## 배포 차단 조건
-
-- `tenant_registry` 변경에 대한 승인과 감사 절차가 없으면 배포를 중단합니다.
-- schema 또는 prefix 충돌 검출이 없으면 배포를 승인하지 않습니다.

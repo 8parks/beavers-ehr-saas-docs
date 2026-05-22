@@ -27,20 +27,20 @@ outline: [2, 4]
 
 ## 공격 성립 조건
 
-- 다운로드 요청 시 tenant, patient, request status를 재검증하지 않습니다.
-- 데이터셋 전달 권한이 승인 취소 이후에도 남습니다.
-- object key가 tenant-bound 형식으로 고정되지 않습니다.
-- S3, KMS, DynamoDB 접근이 VPC endpoint 정책 없이 과도하게 열려 있습니다.
-- dataset `READY` 상태와 다운로드 허용 시점이 분리되어 있습니다.
+- 다운로드 요청 시 tenant, patient, request status를 재검증하지 않음.
+- 데이터셋 전달 권한이 승인 취소 이후에도 남아 있음.
+- object key가 tenant-bound 형식으로 고정되지 않음.
+- S3, KMS, DynamoDB 접근이 VPC endpoint 정책 없이 과도하게 열려 있음.
+- dataset `READY` 상태와 다운로드 허용 시점이 분리되어 있음.
 
-## 위협 전개
+## 위협 시나리오
 
-1. 공격자는 정상 사용자로 데이터셋 다운로드 또는 첨부파일 조회를 시도합니다.
-2. 전달 경로가 승인 상태를 다시 확인하지 않으면, 이미 취소되었거나 범위를 벗어난 요청도 계속 처리됩니다.
-3. object key 검증이 느슨하면 다른 tenant 경로나 다른 환자 경로의 객체를 참조하게 됩니다.
-4. 내부 서비스 접근이 VPC endpoint 정책으로 제한되지 않으면 사설 경로를 가장한 과도한 객체 접근이 허용될 수 있습니다.
+1. 연구기관 사용자가 정상 계정으로 승인된 데이터셋을 다운로드하거나, 의료진 사용자가 첨부파일 조회 경로를 호출함.
+2. 이후 승인 상태가 취소되거나 만료되었는데도 다운로드 처리 경로가 `dataset_id` 또는 `object_key`만 기준으로 요청을 처리함.
+3. object key 검증이 느슨하면 다른 tenant prefix, 다른 환자 경로, 이전 요청에 속한 dataset 객체를 그대로 참조하게 됨.
+4. 결과적으로 승인 범위를 벗어난 데이터셋 또는 임상 파일이 반출되고, 내부 서비스 경로까지 과도하게 열려 있으면 사설 경로를 이용한 객체 접근도 함께 성립함.
 
-## 필수 예방 통제
+## 필수 예방 사항
 
 - 데이터 전달 경로는 요청 시점마다 승인 상태와 전달 가능 상태를 다시 확인해야 합니다.
 - object key는 `tenant/patient/record` 또는 `tenant/approved/request_id` 규칙으로 강제해야 합니다.
@@ -48,7 +48,7 @@ outline: [2, 4]
 - S3, KMS, DynamoDB 접근은 VPC endpoint와 endpoint policy를 통해 사설 경로로 제한해야 합니다.
 - content type, size, hash, 필요 시 악성 파일 검사 절차를 포함해야 합니다.
 
-## 필수 탐지 통제
+## 필수 탐지 사항
 
 - CloudTrail data events와 S3 access pattern에서 동일 object에 대한 비정상 반복 다운로드를 탐지합니다.
 - 승인 취소 이후에도 계속되는 dataset 다운로드 시도를 탐지합니다.
@@ -68,16 +68,11 @@ outline: [2, 4]
 
 데이터 전달 경로 검증은 최초 승인 시점만으로 충분하지 않습니다. dataset 제공 경로는 최소한 `APPROVED`, `READY`, 만료 여부를 다시 확인할 수 있어야 하며, 승인 취소 또는 incident containment 이후 기존 전달 권한이 계속 사용되지 않도록 설계해야 합니다.
 
-## 요구 증빙 및 검증 주기
+## 운영 점검 항목 및 주기
 
 | 증빙 항목 | 최소 내용 | 주기 |
 |----------|----------|------|
 | 전달 경로 정책 정의서 | 승인 상태 검증, object key 규칙, 전달 종료 조건, 차단 절차 | 설계 변경 시마다 |
-| object path 음성 테스트 | 다른 tenant prefix, 다른 patient 경로, 승인 전 dataset 경로 시도 결과 | 매 릴리스 |
+| object path 차단 테스트 | 다른 tenant prefix, 다른 patient 경로, 승인 전 dataset 경로 시도 결과 | 매 릴리스 |
 | data event 로그 표본 | 다운로드 actor, object, 승인 상태, result가 식별 가능한 표본 | 월간 |
 | 비정상 다운로드 탐지 규칙 | 반복 다운로드, 승인 취소 후 다운로드, endpoint 정책 변경 경보 규칙 | 월간 |
-
-## 배포 차단 조건
-
-- 데이터 전달 경로가 tenant-bound object key 없이 임의 경로를 허용하면 배포를 중단합니다.
-- 전달 경로 사용 이력을 CloudTrail data events 또는 S3 access logs로 식별할 수 없으면 배포를 승인하지 않습니다.
