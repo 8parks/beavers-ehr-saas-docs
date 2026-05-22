@@ -28,7 +28,7 @@ features:
 
 ## About this Project
 
-<img src="/beavers-ehr-saas-docs/babybeavers logo.png" alt="Baby Beavers" class="about-logo" />
+<img src="/beavers-ehr-saas-docs/babybeavers-logo.png" alt="Baby Beavers" class="about-logo" />
 
 [Beaver Dam 커뮤니티](https://beaver-dam.net/kr) 지원으로 [Baby Beavers 1기](https://baby.beaver-dam.net/kr)로 만나게 된 팀이 함께 진행한 프로젝트입니다.
 
