@@ -11,13 +11,13 @@ title: 인증 / 인가 전략
 
 ### 설계 원칙
 
-로그인 시 발급되는 JWT에 `tenant_id`를 포함하면 애플리케이션에서 사용자의 tenant를 식별할 수 있다. 그러나 JWT는 클라이언트가 전달하는 값이므로, 매 요청마다 반드시 서명 검증을 수행해야 한다.
+로그인 시 발급되는 JWT에 `tenant_id`를 포함하면 애플리케이션에서 사용자의 tenant를 식별할 수 있습니다. 그러나 JWT는 클라이언트가 전달하는 값이므로, 매 요청마다 반드시 서명 검증을 수행해야 합니다.
 
-애플리케이션은 JWT payload의 `tenant_id`를 그대로 신뢰하는 것이 아니라, Cognito가 발급한 토큰인지 public key로 검증한 뒤에만 tenant 정보를 사용해야 한다.
+애플리케이션은 JWT payload의 `tenant_id`를 그대로 신뢰하는 것이 아니라, Cognito가 발급한 토큰인지 public key로 검증한 뒤에만 tenant 정보를 사용해야 합니다.
 
 ### 결정
 
-**Amazon Cognito User Pool로 인증하고, JWT Custom Attribute로 `custom:tenant_id`와 Cognito Group으로 역할을 관리한다. API Gateway Authorizer 또는 Lambda Authorizer에서 서명 검증 후 claim을 추출하며, Lambda 내부에서도 defense-in-depth로 재확인한다.**
+**Amazon Cognito User Pool로 인증하고, JWT Custom Attribute로 `custom:tenant_id`와 Cognito Group으로 역할을 관리합니다. API Gateway Authorizer 또는 Lambda Authorizer에서 서명 검증 후 claim을 추출하며, Lambda 내부에서도 defense-in-depth로 재확인합니다.**
 
 ### 고려된 대안
 
@@ -73,13 +73,13 @@ API Gateway Authorizer → JWT 서명 검증 통과
 
 ### 설계 원칙
 
-역할(Role)만으로는 멀티테넌트 환경에서 충분하지 않다. "의사"라는 역할을 가졌더라도 다른 병원의 데이터에는 접근할 수 없어야 한다. 따라서 역할 기반 접근 제어(RBAC)에 `tenant_id` 속성을 결합한 형태(ABAC)를 적용한다.
+역할(Role)만으로는 멀티테넌트 환경에서 충분하지 않습니다. "의사"라는 역할을 가졌더라도 다른 병원의 데이터에는 접근할 수 없어야 합니다. 따라서 역할 기반 접근 제어(RBAC)에 `tenant_id` 속성을 결합한 형태(ABAC)를 적용합니다.
 
-즉, 모든 인가 판단은 **"어떤 역할인가" + "어느 테넌트 소속인가"** 두 가지를 동시에 확인한다.
+즉, 모든 인가 판단은 **"어떤 역할인가" + "어느 테넌트 소속인가"** 두 가지를 동시에 확인합니다.
 
 ### 결정
 
-**Cognito Group으로 역할을 관리하고, 서비스 레이어에서 role + tenant_id 조합으로 API 접근을 제어한다.**
+**Cognito Group으로 역할을 관리하고, 서비스 레이어에서 role + tenant_id 조합으로 API 접근을 제어합니다.**
 
 ### 역할별 접근 매트릭스
 
@@ -118,11 +118,11 @@ GET /research-datasets/{dataset_id}
 
 ### 설계 원칙
 
-Lambda 함수가 모두 동일한 IAM role을 사용하면, 하나의 함수가 탈취됐을 때 전체 시스템에 영향이 미친다. 함수별로 최소 권한 IAM role을 부여하고, DB 자격증명은 Secrets Manager에서, 암호화 키는 KMS Customer Managed Key(CMK)를 통해 관리하면 각 함수가 자신의 역할 범위를 벗어날 수 없다.
+Lambda 함수가 모두 동일한 IAM role을 사용하면, 하나의 함수가 탈취됐을 때 전체 시스템에 영향이 미칩니다. 함수별로 최소 권한 IAM role을 부여하고, DB 자격증명은 Secrets Manager에서, 암호화 키는 KMS Customer Managed Key(CMK)를 통해 관리하면 각 함수가 자신의 역할 범위를 벗어날 수 없습니다.
 
 ### 결정
 
-**Lambda 함수별로 최소 권한 IAM role을 부여한다. DB 자격증명은 Secrets Manager에서 런타임에 조회하고, 암호화는 KMS CMK를 사용한다.**
+**Lambda 함수별로 최소 권한 IAM role을 부여합니다. DB 자격증명은 Secrets Manager에서 런타임에 조회하고, 암호화는 KMS CMK를 사용합니다.**
 
 ### Lambda 함수별 IAM Role 설계
 
@@ -133,11 +133,11 @@ Lambda 함수가 모두 동일한 IAM role을 사용하면, 하나의 함수가 
 | admin-lambda | DynamoDB `ehr-tenant-registry` 읽기/쓰기, Cognito 사용자 관리 |
 | audit-log-lambda | CloudWatch Logs 쓰기, S3 audit prefix 쓰기, KMS encrypt |
 
-각 함수의 IAM role은 다른 함수의 권한 범위와 교차하지 않도록 설계한다.
+각 함수의 IAM role은 다른 함수의 권한 범위와 교차하지 않도록 설계합니다.
 
 ### Secrets Manager — DB 자격증명 관리
 
-Lambda가 Aurora에 접속할 때 비밀번호를 코드나 환경변수에 하드코딩하지 않는다. 대신 Secrets Manager에서 런타임에 조회한다.
+Lambda가 Aurora에 접속할 때 비밀번호를 코드나 환경변수에 하드코딩하지 않습니다. 대신 Secrets Manager에서 런타임에 조회합니다.
 
 ```
 Lambda 시작
@@ -153,7 +153,7 @@ Lambda 시작
 
 ### KMS 고객 관리형 키(CMK) 설계
 
-AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시적으로 제어할 수 있고, CloudTrail에서 모든 키 사용 이력을 감사할 수 있다.
+AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시적으로 제어할 수 있고, CloudTrail에서 모든 키 사용 이력을 감사할 수 있습니다.
 
 | 용도 | CMK | 접근 허용 주체 |
 |------|-----|--------------|
