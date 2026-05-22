@@ -28,26 +28,26 @@ outline: [2, 4]
 
 ## 공격 성립 조건
 
-- application audit가 존재하지 않거나 PHI 이벤트를 충분히 기록하지 않습니다.
-- CloudTrail data events 범위에서 clinical S3, dataset S3, `tenant_registry`, `dataset_requests`가 빠져 있습니다.
-- request ID, actor ID, tenant ID, request status 같은 correlation field가 없습니다.
-- 로그 보존 정책, validation, delivery failure monitoring이 없습니다.
+- application audit가 존재하지 않거나 PHI 이벤트를 충분히 기록하지 않음.
+- CloudTrail data events 범위에서 clinical S3, dataset S3, `tenant_registry`, `dataset_requests`가 빠져 있음.
+- request ID, actor ID, tenant ID, request status 같은 correlation field가 없음.
+- 로그 보존 정책, validation, delivery failure monitoring이 없음.
 
-## 위협 전개
+## 위협 시나리오
 
-1. 누군가 PHI를 조회, 수정, 승인, 다운로드, 비상 접근합니다.
-2. 일부 로그는 남지만 다른 로그와 연결되지 않습니다.
-3. 조사자는 영향 환자, 영향 tenant, 영향 데이터 범위를 특정하지 못합니다.
-4. 규제 보고와 고객 통지가 지연되거나 부정확해집니다.
+1. 사용자가 PHI를 조회·수정하거나, 연구 데이터셋을 다운로드하거나, 운영자가 비상 접근을 수행함.
+2. CloudTrail, app audit, SSM 세션 로그, 데이터 전달 로그 중 일부만 남고, 서로를 연결할 correlation field가 부족한 상태가 발생함.
+3. 조사자는 어떤 환자 정보가 열람되었는지, 어느 tenant가 영향을 받았는지, 추가 반출이 있었는지 즉시 특정하지 못함.
+4. 결국 규제 보고, 고객 통지, 재발 방지 조치가 지연되거나 잘못된 범위를 기준으로 진행될 수 있음.
 
-## 필수 예방 통제
+## 필수 예방 사항
 
 - PHI 관련 애플리케이션 이벤트는 별도 app audit로 남깁니다.
 - CloudTrail management event와 필요한 data event를 모두 활성화합니다.
 - 로그에는 actor, tenant, resource, action, outcome, correlation ID가 포함되어야 합니다.
 - 감사 로그 보존은 변조 방지 정책과 함께 운영합니다.
 
-## 필수 탐지 통제
+## 필수 탐지 사항
 
 - trail 비활성화, log delivery 실패, 감사 이벤트 누락을 경보화합니다.
 - app audit와 CloudTrail 간 이벤트 수 차이를 주기적으로 점검합니다.
@@ -65,7 +65,7 @@ outline: [2, 4]
 - CloudTrail과 app audit 중 하나라도 중단되면 즉시 운영자가 인지할 수 있어야 합니다.
 - 로그 보존과 검증 실패가 정기 점검 항목으로 관리되어야 합니다.
 
-## 요구 증빙 및 검증 주기
+## 운영 점검 항목 및 주기
 
 | 증빙 항목 | 최소 내용 | 주기 |
 |----------|----------|------|
@@ -73,8 +73,3 @@ outline: [2, 4]
 | app audit 표본 | actor, tenant, resource, action, result, correlation ID가 포함된 PHI 이벤트 표본 | 월간 |
 | delivery failure 테스트 | CloudTrail 또는 app audit delivery failure 알람 시험 결과 | 분기별 |
 | 보존 정책 증빙 | Object Lock, 보존 기간, 삭제 제한 정책 검토 결과 | 반기별 |
-
-## 배포 차단 조건
-
-- PHI 관련 app audit가 없으면 배포를 중단합니다.
-- CloudTrail 또는 감사 로그 보존 정책이 비활성 상태면 배포를 승인하지 않습니다.

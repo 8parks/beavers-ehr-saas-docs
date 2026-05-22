@@ -13,7 +13,7 @@ outline: [2, 3]
 - 위협이 성립하는 전제 조건
 - 실제 공격 또는 실패 전개 순서
 - 필수 예방, 탐지, 대응 통제
-- 검증 기준과 배포 차단 조건
+- 검증 기준과 운영 점검 항목
 
 ## 위협 시나리오 목록
 
@@ -34,7 +34,7 @@ outline: [2, 3]
 | [`T-13`](/ko/05-threat-modeling/05-threat-scenarios/t-013-db-failure-and-recovery-isolation-breakdown) | 데이터베이스 장애 및 복구 시 격리 붕괴 | 높음 | `S7` |
 | [`T-14`](/ko/05-threat-modeling/05-threat-scenarios/t-014-phi-incident-response-failure) | PHI 유출 사고 대응 실패 | 높음 | `S1`, `S2`, `S3`, `S6` |
 
-## 시나리오별 빠른 이동
+## 시나리오별 요약
 
 ### [T-01 Cross-Tenant Access](/ko/05-threat-modeling/05-threat-scenarios/t-001-cross-tenant-access)
 

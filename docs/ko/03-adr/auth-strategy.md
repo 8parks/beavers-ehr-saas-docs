@@ -6,7 +6,6 @@ title: 인증 / 인가 전략
 
 누가, 어느 테넌트의, 어떤 데이터에 접근할 수 있는지를 어떻게 판단할 것인가에 대한 전략입니다. 인증은 Cognito가 담당하고, 인가는 JWT 클레임 기반으로 서비스 레이어에서 처리합니다. 자격증명과 암호화 키는 코드에 포함하지 않고 Secrets Manager와 KMS로 관리합니다.
 
----
 
 ## 1. JWT 기반 Tenant Claim 검증
 
@@ -69,7 +68,6 @@ API Gateway Authorizer → JWT 서명 검증 통과
 - 토큰 취소(revocation) 필요 시 Cognito global sign-out 또는 계정 비활성화 사용
 - 로그에 `tenant_id`는 포함하되 PHI 원문은 포함하지 않음
 
----
 
 ## 2. RBAC / ABAC — 역할 및 속성 기반 접근 제어
 
@@ -115,7 +113,6 @@ GET /research-datasets/{dataset_id}
 2. /research-datasets API → 허용 역할: [researcher] → 403 반환
 ```
 
----
 
 ## 3. Trust Boundary — 서비스 계층 격리
 
@@ -180,7 +177,6 @@ AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시
 - Aurora, S3, CloudWatch Logs, Secrets Manager에 CMK 적용
 - 키 정책으로 접근 주체 명시
 
----
 
 ## 추가 고민할 지점
 
@@ -190,7 +186,6 @@ AWS managed key 대신 CMK를 사용하면 Key Policy로 접근 주체를 명시
 - **CMK 범위**: tenant별 CMK 분리 여부 (비용 vs 격리 수준 트레이드오프)
 - **Lambda Authorizer 캐싱**: Authorizer 응답 캐시 TTL 설정과 취소된 토큰 감지 간의 트레이드오프
 
----
 
 ## 컴플라이언스 매핑
 

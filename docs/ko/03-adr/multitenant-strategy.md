@@ -8,7 +8,6 @@ title: 멀티테넌트 전략
 
 > JWT 기반 tenant 클레임 검증과 인가 전략은 [인증/인가 전략](./auth-strategy)에서, Tenant Provisioning·Lifecycle 관리는 [운영 및 라이프사이클 전략](./operations-strategy)에서 다룹니다.
 
----
 
 ## 1. DB 계층 격리 — Schema-per-Tenant + RLS
 
@@ -62,7 +61,6 @@ GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA hospital_a TO app_role_hosp
 
 IAM Database Authentication도 추가 인증 레이어로 검토 가능하다.
 
----
 
 ## 2. Connection-level Tenant Context 설정
 
@@ -110,7 +108,6 @@ CREATE POLICY tenant_isolation_policy
   USING (tenant_id = current_setting('app.current_tenant'));
 ```
 
----
 
 ## 3. 캐시·로그·임시 파일 Tenant 분리
 
@@ -160,7 +157,6 @@ S3 bucket policy에서 prefix 기반 접근을 제한하고, S3 lifecycle policy
 
 PHI 원문은 포함하지 않고 식별자 중심으로 기록한다.
 
----
 
 ## 4. Cross-tenant 접근 시도 탐지 및 대응
 
@@ -210,7 +206,6 @@ action:          SNS → Slack security channel
 
 GuardDuty는 AWS 계정·네트워크 수준 이상행위 탐지에 활용하며, tenant mismatch는 custom CloudWatch metric으로 탐지한다. 반복 발생 시 Cognito global sign-out 또는 계정 임시 비활성화를 검토한다.
 
----
 
 ## 추가 고민할 지점
 
@@ -219,7 +214,6 @@ GuardDuty는 AWS 계정·네트워크 수준 이상행위 탐지에 활용하며
 
 > Break-glass 상황에서의 tenant 격리 원칙은 [운영 및 라이프사이클 전략 — Break-glass 비상 접근](./operations-strategy#4-break-glass-비상-접근)에서 다룬다.
 
----
 
 ## 컴플라이언스 매핑
 

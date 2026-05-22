@@ -27,26 +27,26 @@ outline: [2, 4]
 
 ## 공격 성립 조건
 
-- access token과 ID token을 혼용합니다.
-- token TTL이 길고 revocation 전략이 없습니다.
-- role claim, tenant type claim, group claim, `scope` 간 불일치가 허용됩니다.
-- 사용자 비활성화, tenant suspend, 역할 변경 후 세션 무효화가 즉시 수행되지 않습니다.
+- access token과 ID token을 혼용함.
+- token TTL이 길고 revocation 전략이 없음.
+- role claim, tenant type claim, group claim, `scope` 간 불일치가 허용됨.
+- 사용자 비활성화, tenant suspend, 역할 변경 후 세션 무효화가 즉시 수행되지 않음.
 
-## 위협 전개
+## 위협 시나리오
 
-1. 사용자는 정상적으로 발급된 token 또는 refresh token을 보유합니다.
-2. 이후 역할이 변경되거나 계정이 비활성화되거나 tenant 상태가 바뀝니다.
-3. 애플리케이션이 claim coherence를 재검증하지 않으면 이전 권한이 그대로 적용됩니다.
-4. 사용자는 더 이상 허용되지 않아야 할 PHI 또는 데이터셋 경로에 접근합니다.
+1. 사용자가 정상적으로 발급된 access token 또는 refresh token을 보유한 상태에서 병원 이동, 역할 변경, 계정 비활성화, tenant 중지 조치를 받음.
+2. 토큰 회수나 세션 무효화가 즉시 수행되지 않거나, route authorizer가 ID token과 access token을 혼용해 처리함.
+3. Lambda가 `tenant_id`, `tenant_type`, `role`, `group`, `scope`의 정합성을 다시 확인하지 않으면 예전 권한이 그대로 남음.
+4. 사용자는 이미 회수되어야 할 차트 조회, 기록 작성, 데이터셋 요청·승인·생성 경로를 계속 호출할 수 있게 됨.
 
-## 필수 예방 통제
+## 필수 예방 사항
 
 - authorizer는 access token과 필요한 scope만 허용해야 합니다.
 - Lambda는 `tenant_id`, `tenant_type`, `role`, `group`, `scope`의 일관성을 재검증해야 합니다.
 - 계정 비활성화와 역할 변경 시 세션 폐기 절차를 반드시 수행해야 합니다.
 - break-glass 또는 비상 계정은 일반 사용자와 별도 token 정책을 사용해야 합니다.
 
-## 필수 탐지 통제
+## 필수 탐지 사항
 
 - 만료 또는 회수된 토큰 재사용 시도를 경보화합니다.
 - 동일 계정의 비정상 위치, 비정상 단말, 비정상 시간대 접근을 탐지합니다.
@@ -66,7 +66,7 @@ outline: [2, 4]
 
 특히 `access token`과 `ID token`의 혼용은 구현상 자주 발생하는 오류입니다. route authorizer가 scope를 검증한다는 사실만으로 충분하지 않으며, Lambda 단계에서도 `tenant_id`, `tenant_type`, `role`, `group`의 정합성을 다시 확인해야 합니다.
 
-## 요구 증빙 및 검증 주기
+## 운영 점검 항목 및 주기
 
 | 증빙 항목 | 최소 내용 | 주기 |
 |----------|----------|------|
@@ -74,8 +74,3 @@ outline: [2, 4]
 | 계정 상태 회귀 테스트 | user disable, role change, tenant suspend 후 기존 세션 차단 결과 | 매 릴리스 |
 | claim coherence 테스트 | 불일치하는 role/group/scope/tenant_type 조합에 대한 차단 결과 | 매 릴리스 |
 | 세션 회수 절차 증빙 | refresh token 회수, 강제 로그아웃, incident 시 전면 무효화 절차 | 분기별 점검 |
-
-## 배포 차단 조건
-
-- group과 role claim이 불일치해도 요청이 허용되면 배포를 중단합니다.
-- 계정 비활성화 이후 기존 세션이 계속 유효하면 배포를 승인하지 않습니다.
