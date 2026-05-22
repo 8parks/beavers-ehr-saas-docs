@@ -11,15 +11,17 @@ title: 멀티테넌트 전략
 
 ## 1. DB 계층 격리 — Schema-per-Tenant + RLS
 
-### 설계 원칙
+### 격리 모델: Bridge
 
-애플리케이션에서 `tenant_id`를 검증하더라도, DB 계층에서 추가적인 방어선이 없으면 애플리케이션 버그나 잘못된 쿼리로 인해 다른 tenant 데이터에 접근할 위험이 있습니다.
+이 설계는 **Bridge 모델**을 기반으로 합니다. 각 테넌트마다 독립된 PostgreSQL 스키마를 두고, 트랜잭션 시작 시점에 `SET LOCAL search_path`를 통해 테넌트 컨텍스트를 명시적으로 설정합니다.
 
-따라서 PostgreSQL에서는 병원 tenant별 schema를 분리하고, 각 schema에 대한 접근 권한을 엄격하게 관리합니다. Schema 분리 위에 **Row-Level Security(RLS)** 또는 tenant별 DB role grant 정책을 추가해 DB 자체에서도 tenant isolation을 강제합니다.
+권한 관리는 테넌트별 DB role을 기반으로 합니다. 각 스키마에 대한 GRANT는 해당 테넌트의 DB 사용자에게만 부여되며, 불필요한 권한은 REVOKE로 즉시 회수합니다. 결과적으로 A 테넌트의 DB 사용자는 B 테넌트 스키마에 물리적으로 접근 자체가 불가능합니다.
+
+Aurora 특성상 Writer에서 설정된 권한이 Reader에도 자동으로 반영되므로, 읽기 트래픽에서도 동일한 격리가 보장됩니다.
 
 ### 결정
 
-**Schema-per-Tenant를 기본 격리 전략으로 채택하고, RLS를 심층 방어(defense-in-depth) 메커니즘으로 추가 적용합니다.**
+**Schema-per-Tenant를 기본 격리 전략으로 채택하고, RLS를 심층 방어 메커니즘으로 추가 적용합니다.**
 
 ### 고려된 대안
 
@@ -31,22 +33,27 @@ title: 멀티테넌트 전략
 | **Schema-per-Tenant + RLS (채택)** | **높음** | **중간-높음** | **낮음-중간** |
 | Database-per-Tenant | 높음 | 높음 | 높음 |
 
-### 근거
+### Bridge 모델인데 왜 RLS를 도입했는가
 
-Schema-per-Tenant + RLS 조합은 Database-per-Tenant보다 비용 효율적이면서, 단순 공유 테이블 또는 RLS 단독보다 강한 격리를 제공합니다. 서비스 레이어 버그가 발생하더라도 DB 레이어에서 추가로 차단할 수 있어 두 겹의 방어선이 됩니다.
+스키마 격리와 권한 분리만으로도 테넌트 isolation은 보장됩니다. 그럼에도 RLS를 추가로 도입한 이유는 두 가지입니다.
+
+**PHI를 다루는 환경에서는 단일 방어선으로 충분하지 않습니다.** HIPAA minimum necessary 원칙은 다층 방어를 요구합니다. 환자 진료 정보라는 데이터 성격상, 스키마 격리 하나만으로 설계를 마무리하는 것은 적절하지 않다고 판단했습니다.
+
+**애플리케이션 로직 실수에 대한 방어선이 필요합니다.** 예를 들어 `SET LOCAL search_path` 호출이 누락되거나 잘못된 테넌트 ID가 전달되는 버그가 생긴 경우, RLS가 DB 레벨에서 한 번 더 차단해 줍니다.
+
+RLS 적용 범위는 Bridge 모델의 특성에 맞게 구분합니다. **공유 테이블**에는 RLS를 1차 격리 수단으로 적용하고, **임상 테이블**에는 스키마 격리 위에 RLS를 중복 적용해 보조합니다.
 
 ### 기술적 요구사항
 
-- tenant별 schema 분리 (`hospital_a`, `hospital_b` 등)
-- tenant별 DB role 또는 connection role 제한
+- 테넌트별 schema 분리 (`hospital_a`, `hospital_b` 등)
+- 테넌트별 DB role 기반 GRANT/REVOKE 관리
 - cross-schema query 제한
 - migration 및 운영자 계정 권한 최소화
-- 잘못된 쿼리로 인한 cross-tenant access 방지
-- DB audit log 또는 pgaudit으로 cross-schema 접근 시도 기록
+- pgaudit으로 cross-schema 접근 시도 기록
 
 ### AWS / PostgreSQL 구현
 
-Aurora PostgreSQL 또는 RDS PostgreSQL을 사용합니다. 애플리케이션 DB 계정은 필요한 tenant schema에만 접근하며, 운영자 계정과 애플리케이션 계정을 분리합니다.
+Aurora PostgreSQL을 사용합니다. Writer에서 설정된 권한은 Aurora 복제 메커니즘에 의해 Reader에 자동으로 반영됩니다. 운영자 계정과 애플리케이션 계정은 분리합니다.
 
 ```sql
 CREATE SCHEMA hospital_a;
@@ -59,16 +66,14 @@ GRANT USAGE ON SCHEMA hospital_a TO app_role_hospital_a;
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA hospital_a TO app_role_hospital_a;
 ```
 
-IAM Database Authentication도 추가 인증 레이어로 검토 가능합니다.
-
 
 ## 2. Connection-level Tenant Context 설정
 
 ### 설계 원칙
 
-멀티테넌트 SaaS에서는 요청마다 어떤 tenant의 문맥에서 DB 작업이 수행되는지 명확해야 합니다. Lambda나 애플리케이션 서버가 DB connection pool을 사용할 경우, 이전 요청의 tenant context가 다음 요청에 남아 있으면 심각한 cross-tenant leakage가 발생할 수 있습니다.
+Lambda는 Aurora에 직접 접근하지 않고 RDS Proxy를 경유합니다. RDS Proxy를 통해 Aurora 부하를 줄이는 동시에, DB 접속 정보는 Secrets Manager Interface Endpoint를 통해 VPC 외부로 트래픽을 노출하지 않고 조회합니다. 이때 테넌트별로 발급된 DB 자격증명을 통해서만 연결이 성립하도록 설계했습니다.
 
-따라서 매 요청마다 DB connection에 tenant context를 명시적으로 설정하고, 요청 종료 후 반드시 reset해야 합니다.
+connection pool을 사용할 경우, 이전 요청의 tenant context가 다음 요청에 남아 있으면 cross-tenant leakage가 발생할 수 있습니다. 따라서 매 요청마다 DB connection에 tenant context를 명시적으로 설정해야 합니다.
 
 ### 결정
 
